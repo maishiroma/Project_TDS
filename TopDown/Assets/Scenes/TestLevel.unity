@@ -207,7 +207,7 @@ MonoBehaviour:
   enemySpawn_Cloud: {fileID: 1971092924550660, guid: 4c06b15cb08164ae1aa5066eec2cfba5,
     type: 2}
   maxEnemySpawn: 10
-  spawnRate: 0.5
+  spawnRate: 2
   leftMostRange: -30
   rightMostRange: 30
   bottomMostRange: -18

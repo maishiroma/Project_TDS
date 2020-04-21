@@ -1,13 +1,11 @@
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
 /*  The projectile travels in a straight line from what it was fired from.
  *  When in contact with anything, it will be destroyd.
  * 
  */
 
 namespace Matt_Movement {
+    using UnityEngine;
+
     public class Projectile : MonoBehaviour {
 
         [Header("General Vars")]
@@ -28,13 +26,13 @@ namespace Matt_Movement {
             rb = GetComponent<Rigidbody2D>();
         }
 
+        // Upon creation, the projectile will remove itself
         private void Start() {
-            // Upon creation, the projectile will remove itself
             Invoke("DestroyItself", 5f);
         }
 
+        // While active, it will move in a straight line
         private void FixedUpdate() {
-            // While active, it will move in a straight line
             rb.velocity = rb.transform.up * moveSpeed * Time.deltaTime;
         }
 
@@ -45,7 +43,7 @@ namespace Matt_Movement {
             if(collision.gameObject.tag != origShooterTag) {
 
                 // In general, we only go in here if this projectile can interact with it aka, if it is in the array
-                if(checkIfTagIsInArray(collision.gameObject.tag)) {
+                if(CheckIfTagIsInArray(collision.gameObject.tag)) {
                     switch(collision.gameObject.tag) {
                         case "Enemy":
                             // Damage Enemy
@@ -72,9 +70,9 @@ namespace Matt_Movement {
         }
 
         // Helper method to check if a tag is in the array
-        private bool checkIfTagIsInArray(string tag) {
+        private bool CheckIfTagIsInArray(string checkedTag) {
             for(int index = 0; index < interactableTags.Length; ++index) {
-                if(interactableTags[index] == tag) {
+                if(interactableTags[index] == checkedTag) {
                     return true;
                 }
             }

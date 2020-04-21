@@ -1,8 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿/*  Spawns enemies in a given radius of an area
+ * 
+ */
 
 namespace Matt_Gimmicks {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public class EnemySpawner : MonoBehaviour {
 
         [Header("Outside Refs Vars")]
@@ -29,7 +33,7 @@ namespace Matt_Gimmicks {
 
         // Private Vars
         private List<GameObject> spawnedObjs = new List<GameObject>();      // A list of all of the spawned objects
-        private bool disableSpawn;  // Disables spawning objects alltogether
+        private bool disableSpawn;                                          // Disables spawning objects alltogether
 
         // Sets up the random seed
         private void Start() {

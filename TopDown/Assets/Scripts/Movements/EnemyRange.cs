@@ -1,12 +1,10 @@
-using UnityEngine;
-using System.Collections;
-
 /*  Enemy Range
  *  Dictates whether anything of interest is in the enemy's range.
  *  If so, a specific value will be triggered in the respected components
  */
 
 namespace Matt_Movement {
+    using UnityEngine;
 
     [RequireComponent(typeof(CircleCollider2D))]
     public class EnemyRange : MonoBehaviour {
@@ -19,6 +17,7 @@ namespace Matt_Movement {
         [Tooltip("Ref to the enemy associated with this range")]
         public EnemyMovement enemyMovement;
 
+        // Enforces that the enemyMovement variable is associated
         private void Start() {
             if (enemyMovement == null) {
                 Debug.LogError("Need enemy movment component on!");
@@ -28,20 +27,32 @@ namespace Matt_Movement {
 
 		// If a specific object enters the range of this, something happens
         private void OnTriggerStay2D(Collider2D collision) {
-            if(checkIfTagIsInArray(collision.gameObject.tag)) {
+            if(CheckIfTagIsInArray(collision.gameObject.tag)) {
                 switch(collision.gameObject.tag) {
                     case "Player":
                         // If the player is in our range, we shoot at them.
-                        StartCoroutine(enemyMovement.ShootProjectile());
+                        enemyMovement.IsAttacking = true;
                         break;
                 }
             }
 		}
 
+        // If a specific object leaves the range, something happens
+        private void OnTriggerLeave2D(Collider2D collision) {
+            if (CheckIfTagIsInArray(collision.gameObject.tag)) {
+                switch (collision.gameObject.tag) {
+                    case "Player":
+                        // If the player is out of range, we stop attacking
+                        enemyMovement.IsAttacking = false;
+                        break;
+                }
+            }
+        }
+
         // Helper method to check if a tag is in the array
-        private bool checkIfTagIsInArray(string tag) {
+        private bool CheckIfTagIsInArray(string checkedTag) {
             for(int index = 0; index < interactableTags.Length; ++index) {
-                if(interactableTags[index] == tag) {
+                if(interactableTags[index] == checkedTag) {
                     return true;
                 }
             }
