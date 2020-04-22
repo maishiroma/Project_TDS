@@ -18,6 +18,15 @@ namespace Matt_Generics {
         [Tooltip("The speed of which the character can attack")]
         [Range(0.1f,5f)]
         public float attackRate;
+        [Tooltip("How fast does the entity move when dodging")]
+        [Range(30f, 60f)]
+        public float dodgeSpeed = 30f;
+        [Tooltip("How long does the dodge last")]
+        [Range(0.1f, 2f)]
+        public float dodgeTime = 0.1f;
+        [Tooltip("How long does the dodge cooldown last")]
+        [Range(0.1f, 2f)]
+        public float dodgeCoolDownTime = 0.2f;
 
         [Header("Outside References")]
         [Tooltip("The projectile the character will use when attacking")]
@@ -28,6 +37,14 @@ namespace Matt_Generics {
         // Protected variables
         protected Rigidbody2D entityRb;         // The rigidbody of the entity
         protected bool hasFired;                // Has the entity fired a projectile?
+        protected bool isDodging;               // Is the entity currently dodging?
+        protected bool isInDodgeCoolDown;       // Is the entity in a dodge cool down?
+
+        // Getter/Setters
+        public bool IsDodging
+        {
+            get { return isDodging; }
+        }
 
         // Makes sure that all public variables are properly set
         private void OnValidate() {
@@ -55,7 +72,7 @@ namespace Matt_Generics {
         // Shoots a projectile that the entity has forward from the given forward position
         protected IEnumerator ShootProjectile(Vector2 posToShootAt) {
             if (hasFired == false) {
-                Quaternion shotRotation = Quaternion.FromToRotation(Vector3.up, posToShootAt - entityRb.position);
+                Quaternion shotRotation = Quaternion.FromToRotation(Vector2.up, posToShootAt - entityRb.position);
                 Projectile bulletShot = Instantiate(entityProjectile, frontOfEntity.position, shotRotation, null);
                 bulletShot.origShooterTag = gameObject.tag;
 
@@ -66,6 +83,25 @@ namespace Matt_Generics {
             yield return null;
         }
 
+        // Sets the entity in a dodge state, allowing them to move quickly in a given direction
+        protected IEnumerator DodgeAction(Vector2 dodgeDir) {
+            if (isDodging == false && isInDodgeCoolDown == false) {
+                // We apply a quick force on the entity given the direction passed in
+                isDodging = true;
+                entityRb.AddForce(dodgeDir * dodgeSpeed, ForceMode2D.Impulse);
+                yield return new WaitForSeconds(dodgeTime);
+
+                // When this is reached, the player should not be able to move
+                entityRb.velocity = Vector2.zero;
+                isInDodgeCoolDown = true;
+                isDodging = false;
+
+                // Time spent waiting for the player to be able to dodge again
+                yield return new WaitForSeconds(dodgeCoolDownTime);
+                isInDodgeCoolDown = false;
+            }
+        }
+
         // Methods that have overridenable defaults
         // Rotates the entity to face the specific point of reference
         protected virtual void OrientateEntity(Vector2 objToLookAt) {
@@ -73,7 +109,6 @@ namespace Matt_Generics {
             float angle = Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg - 90f;
             entityRb.rotation = angle;
         }
-
 
         // Methods that need to be defined in subclasses
         // Defines how the entity moves

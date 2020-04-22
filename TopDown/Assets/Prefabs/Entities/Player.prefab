@@ -160,6 +160,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   attackRate: 0.5
+  dodgeSpeed: 50
+  dodgeTime: 0.1
+  dodgeCoolDownTime: 0.2
   entityProjectile: {fileID: 114381718649626900, guid: 5cf12e55416cd45a4be5e1d507765f5c,
     type: 2}
   frontOfEntity: {fileID: 4984213870746938}

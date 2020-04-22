@@ -8,22 +8,22 @@
  */
 
 namespace Matt_Movement {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using Matt_Generics;
-
+    using System.Collections;
 
     public class PlayerMovement : Entity {
 
         [Header("Subclass Referencess")]
         [Tooltip("The scene's camera")]
         public Camera mainCamera;
-
+      
         // Private vars
         private Vector2 mousePos;       // Stores the coords for the player's mouse
         private Vector2 moveInput;      // Stores the input for the player movement
         private bool shootInput;        // Checks if the player is firing
+        private bool dodgeInput;        // Checks if the player is dodging
+        private int currNumbOfDodges;
 
         // Handles getting all player input
         private void Update() {
@@ -36,19 +36,36 @@ namespace Matt_Movement {
 
             // Get player input for firing
             shootInput = Input.GetKey(KeyCode.Mouse0);
+
+            // Gets player input for dodging
+            if(Input.GetKey(KeyCode.Space) && isInDodgeCoolDown == false) {
+                dodgeInput = true;
+            }
+            else {
+                dodgeInput = false;
+            }
         }
 
         // Handles movement and player actions
         private void FixedUpdate() {
-            // Moves player
-            MoveEntity();
+            if (dodgeInput == true && moveInput != Vector2.zero) {
+                // If we input dodge and a movement, we perform the dodge
+                StartCoroutine(DodgeAction(moveInput));
+            }
+            else {
+                // If we are not dodging, we do normal movement
+                if (isDodging == false) {
+                    // Moves player
+                    MoveEntity();
 
-            // Rotates player
-            OrientateEntity(mousePos);
+                    // Rotates player
+                    OrientateEntity(mousePos);
 
-            // Player shoot input
-            if(shootInput == true) {
-                StartCoroutine(ShootProjectile(mousePos));
+                    // Player shoot input
+                    if (shootInput == true && isInDodgeCoolDown == false) {
+                        StartCoroutine(ShootProjectile(mousePos));
+                    }
+                }
             }
         }
 
