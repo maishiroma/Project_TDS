@@ -3,10 +3,12 @@
  * 
  */
 
-namespace Matt_Movement {
+namespace Matt_Movement
+{
     using UnityEngine;
 
-    public class Projectile : MonoBehaviour {
+    public class Projectile : MonoBehaviour
+    {
 
         [Header("General Vars")]
         [Tooltip("The travel speed of the projectile. Shpuld be a high value: i.e. 1000")]
@@ -20,31 +22,40 @@ namespace Matt_Movement {
 
         // Private Vars
         private Rigidbody2D rb;
+        private float origMoveSpeed;
 
         // Sets up all of the components
-        private void Awake() {
+        private void Awake()
+        {
             rb = GetComponent<Rigidbody2D>();
         }
 
         // Upon creation, the projectile will remove itself
-        private void Start() {
+        private void Start()
+        {
+            origMoveSpeed = moveSpeed;
             Invoke("DestroyItself", 5f);
         }
 
         // While active, it will move in a straight line
-        private void FixedUpdate() {
+        private void FixedUpdate()
+        {
             rb.velocity = rb.transform.up * moveSpeed * Time.deltaTime;
         }
 
-		// Interacts with other objects
-		private void OnTriggerEnter2D(Collider2D collision) {
+        // Interacts with other objects
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
             // If we hit something that shares the same tag as the orig shooter, we ignore them
             // Think of this as friendly fire
-            if(collision.gameObject.tag != origShooterTag) {
+            if (collision.gameObject.tag != origShooterTag)
+            {
 
                 // In general, we only go in here if this projectile can interact with it aka, if it is in the array
-                if(CheckIfTagIsInArray(collision.gameObject.tag)) {
-                    switch(collision.gameObject.tag) {
+                if (CheckIfTagIsInArray(collision.gameObject.tag))
+                {
+                    switch (collision.gameObject.tag)
+                    {
                         case "Enemy":
                             // Damage Enemy
                             Destroy(collision.gameObject);
@@ -62,21 +73,36 @@ namespace Matt_Movement {
                     DestroyItself();
                 }
             }
-		}
+        }
 
         // Destroys the projectile
-        private void DestroyItself() {
+        private void DestroyItself()
+        {
             Destroy(this.gameObject);
         }
 
         // Helper method to check if a tag is in the array
-        private bool CheckIfTagIsInArray(string checkedTag) {
-            for(int index = 0; index < interactableTags.Length; ++index) {
-                if(interactableTags[index] == checkedTag) {
+        private bool CheckIfTagIsInArray(string checkedTag)
+        {
+            for (int index = 0; index < interactableTags.Length; ++index)
+            {
+                if (interactableTags[index] == checkedTag)
+                {
                     return true;
                 }
             }
             return false;
+        }
+
+        // Public variables
+        public void TriggerSlowDown(float slowedSpeed)
+        {
+            moveSpeed *= slowedSpeed;
+        }
+
+        public void RestoreToNormalSpeed()
+        {
+            moveSpeed = origMoveSpeed;
         }
     }
 
