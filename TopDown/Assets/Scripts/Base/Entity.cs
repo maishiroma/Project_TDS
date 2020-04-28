@@ -29,7 +29,7 @@ namespace Matt_Generics
 
         // Protected variables
         protected Rigidbody2D entityRb;         // The rigidbody of the entity
-        protected bool hasFired;                // Has the entity fired a projectile?
+        protected bool hasFired = false;        // Has the entity fired a projectile?
 
         // Makes sure that all public variables are properly set
         private void OnValidate()

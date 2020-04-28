@@ -6,6 +6,7 @@
 namespace Matt_Movement
 {
     using UnityEngine;
+    using Matt_Gimmicks;
 
     public class Projectile : MonoBehaviour
     {
@@ -22,7 +23,6 @@ namespace Matt_Movement
 
         // Private Vars
         private Rigidbody2D rb;
-        private float origMoveSpeed;
 
         // Sets up all of the components
         private void Awake()
@@ -33,14 +33,22 @@ namespace Matt_Movement
         // Upon creation, the projectile will remove itself
         private void Start()
         {
-            origMoveSpeed = moveSpeed;
             Invoke("DestroyItself", 5f);
         }
 
         // While active, it will move in a straight line
         private void FixedUpdate()
         {
-            rb.velocity = rb.transform.up * moveSpeed * Time.deltaTime;
+            // If the game is slowed, enemy bullets will be slowed down
+            if (SlowMoEffect.Instance.IsInSlowMo && origShooterTag != "Player")
+            {
+                float newSpeed = moveSpeed * SlowMoEffect.Instance.GetSlowDownFactor;
+                rb.velocity = rb.transform.up * newSpeed * Time.deltaTime;
+            }
+            else
+            {
+                rb.velocity = rb.transform.up * moveSpeed * Time.deltaTime;
+            }
         }
 
         // Interacts with other objects
@@ -62,7 +70,11 @@ namespace Matt_Movement
                             break;
                         case "Player":
                             // Hurt player
-                            print("Ouch!");
+                            PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
+                            if (playerMovement.IsDodging == false)
+                            {
+                                print("Ouch!");
+                            }
                             break;
                         case "Projectile":
                         case "Walls":
@@ -92,17 +104,6 @@ namespace Matt_Movement
                 }
             }
             return false;
-        }
-
-        // Public variables
-        public void TriggerSlowDown(float slowedSpeed)
-        {
-            moveSpeed *= slowedSpeed;
-        }
-
-        public void RestoreToNormalSpeed()
-        {
-            moveSpeed = origMoveSpeed;
         }
     }
 

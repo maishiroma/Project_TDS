@@ -30,7 +30,7 @@ namespace Matt_Movement
         [Tooltip("How long does the dodge cooldown last")]
         [Range(0.1f, 2f)]
         public float dodgeCoolDownTime = 0.2f;
-        public PlayerDodge playerDodge;
+        public DodgeTrigger playerDodge;
 
         // Private vars
         private Vector2 mousePos;       // Stores the coords for the player's mouse

@@ -8,6 +8,7 @@ namespace Matt_Movement
 {
     using UnityEngine;
     using Matt_Generics;
+    using Matt_Gimmicks;
 
     public class EnemyMovement : Entity
     {
@@ -16,7 +17,6 @@ namespace Matt_Movement
         private Rigidbody2D playerRb;       // Caches the player's Rigidbody for future calculations
         private bool isAttacking;           // Is the enemy attacking?
 
-        private float origMoveSpeed;
         private bool isSlowedDown = false;
 
         // Getter/Setter for the isAttacking boolean
@@ -30,7 +30,6 @@ namespace Matt_Movement
         private void Start()
         {
             playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
-            origMoveSpeed = moveSpeed;
         }
 
         // Handles all movement logic
@@ -62,21 +61,20 @@ namespace Matt_Movement
         // Tells enemy to hone in on the player's position
         protected override void MoveEntity()
         {
-            Vector2 newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, moveSpeed * Time.fixedDeltaTime);
+            // If the game is in slow motion, enemy movement will be slowed
+            Vector2 newPos;
+            if (SlowMoEffect.Instance.IsInSlowMo)
+            {
+                float newMoveSpeed = moveSpeed * SlowMoEffect.Instance.GetSlowDownFactor;
+                newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, newMoveSpeed * Time.fixedDeltaTime);
+                isSlowedDown = true;
+            }
+            else
+            {
+                newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, moveSpeed * Time.fixedDeltaTime);
+                isSlowedDown = false;
+            }
             entityRb.MovePosition(newPos);
-        }
-
-        // Public variables
-        public void TriggerSlowDown(float slowedSpeed)
-        {
-            moveSpeed *= slowedSpeed;
-            isSlowedDown = true;
-        }
-
-        public void RestoreToNormalSpeed()
-        {
-            moveSpeed = origMoveSpeed;
-            isSlowedDown = false;
         }
     }
 }

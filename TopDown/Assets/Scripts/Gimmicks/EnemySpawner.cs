@@ -2,12 +2,14 @@
  * 
  */
 
-namespace Matt_Gimmicks {
+namespace Matt_Gimmicks
+{
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class EnemySpawner : MonoBehaviour {
+    public class EnemySpawner : MonoBehaviour
+    {
 
         [Header("Outside Refs Vars")]
         [Tooltip("The prefab object to spawn")]
@@ -33,26 +35,58 @@ namespace Matt_Gimmicks {
 
         // Private Vars
         private List<GameObject> spawnedObjs = new List<GameObject>();      // A list of all of the spawned objects
-        private bool disableSpawn;                                          // Disables spawning objects alltogether
+        private bool disableSpawn = false;                                  // Disables spawning objects alltogether
+        private float amountofTime = 0f;                                    // How much time has passed from the last spawn
 
         // Sets up the random seed
-        private void Start() {
+        private void Start()
+        {
             Random.InitState(Random.Range(1, 255));
+        }
 
-            // Due to the behavior of the spawner, the loop will be done via an InvokeRepeating
-            InvokeRepeating("CheckIfSpawnable", spawnRate, spawnRate);
-            InvokeRepeating("CleanSpawnList", spawnRate * 5f, spawnRate * 5f);
+        private void Update()
+        {
+            // If the game is in slow mo, no enemies will be spawned
+            if (SlowMoEffect.Instance.IsInSlowMo)
+            {
+                disableSpawn = true;
+                StopCoroutine(SpawnEnemy());
+            }
+            else
+            {
+                disableSpawn = false;
+            }
+
+            // When the spawner can spawn enemies, it spawns them on a time interval
+            // Once that time interval is met, an enemy will be spawned (potentally)
+            if (disableSpawn == false)
+            {
+                amountofTime += Time.deltaTime;
+                if (amountofTime >= spawnRate)
+                {
+                    amountofTime = 0;
+                    CheckIfSpawnable();
+                }
+            }
         }
 
         // Checks if the spawner can spawn something
-        private void CheckIfSpawnable() {
-            if(disableSpawn == false && spawnedObjs.Count < maxEnemySpawn)  {
+        // If not, we will clean up the spawn list
+        private void CheckIfSpawnable()
+        {
+            if (spawnedObjs.Count < maxEnemySpawn)
+            {
                 StartCoroutine(SpawnEnemy());
+            }
+            else
+            {
+                CleanSpawnList();
             }
         }
 
         // Spawns an enemy at a random position
-        private IEnumerator SpawnEnemy() {
+        private IEnumerator SpawnEnemy()
+        {
             float xRanPos = Random.Range(leftMostRange, rightMostRange);
             float yRanPos = Random.Range(bottomMostRange, topMostRange);
 
@@ -66,10 +100,13 @@ namespace Matt_Gimmicks {
         }
 
         // Removes all null enemies in list
-        private void CleanSpawnList() {
+        private void CleanSpawnList()
+        {
             disableSpawn = true;
-            for(int currCount = 0; currCount < spawnedObjs.Count; ++currCount) {
-                if(spawnedObjs[currCount] == null) {
+            for (int currCount = 0; currCount < spawnedObjs.Count; ++currCount)
+            {
+                if (spawnedObjs[currCount] == null)
+                {
                     spawnedObjs.RemoveAt(currCount);
                     currCount--;
                 }

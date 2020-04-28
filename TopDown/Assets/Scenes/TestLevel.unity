@@ -280,11 +280,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4728941549554214, guid: 11f570a7ecdb44e139f086cc5b236c6d,
     type: 2}
   m_PrefabInternal: {fileID: 308438980}
---- !u!4 &484029997 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4892196204658464, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1,
-    type: 2}
-  m_PrefabInternal: {fileID: 1383012497}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,11 +496,6 @@ Prefab:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 519420031}
-    - target: {fileID: 114108005312050810, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1,
-        type: 2}
-      propertyPath: playerDodge
-      value: 
-      objectReference: {fileID: 1896586070}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1, type: 2}
   m_IsPrefabAsset: 0
@@ -560,74 +550,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4728941549554214, guid: 11f570a7ecdb44e139f086cc5b236c6d,
     type: 2}
   m_PrefabInternal: {fileID: 1506124649}
---- !u!1 &1896586067
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1896586069}
-  - component: {fileID: 1896586068}
-  - component: {fileID: 1896586070}
-  m_Layer: 0
-  m_Name: DodgeHitbox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!61 &1896586068
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1896586067}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 6, y: 6}
-  m_EdgeRadius: 0
---- !u!4 &1896586069
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1896586067}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 484029997}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1896586070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1896586067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d58916fb61d64fd6b282322836caf77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameSpeed: {fileID: 2033963732}
-  hitTrigger: {fileID: 1896586068}
 --- !u!1 &2033963731
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,11 +574,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2033963731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccbc31843c4f24c018809cf1ee58e14d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9464a560209a6428386d50f414e03a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slowDownFactor: 0.5
   slowDownLength: 2
+  slowDownFactor: 0.5
 --- !u!4 &2033963733
 Transform:
   m_ObjectHideFlags: 0
