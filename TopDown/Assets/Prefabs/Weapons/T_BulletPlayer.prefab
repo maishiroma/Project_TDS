@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26aeb6fe041de4e45a9ffda029e0bc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1000
+  moveSpeed: 2000
   interactableTags:
   - Enemy
   - Projectile

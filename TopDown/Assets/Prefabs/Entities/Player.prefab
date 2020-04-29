@@ -220,10 +220,12 @@ MonoBehaviour:
     type: 2}
   frontOfEntity: {fileID: 4984213870746938}
   mainCamera: {fileID: 0}
-  dodgeSpeed: 50
-  dodgeTime: 0.1
-  dodgeCoolDownTime: 0.2
   playerDodge: {fileID: 114310292655281806}
+  dashSpeed: 50
+  dashTime: 0.2
+  dashCoolDown: 0.1
+  dodgeTime: 0.3
+  dodgeCoolDown: 0.5
 --- !u!114 &114310292655281806
 MonoBehaviour:
   m_ObjectHideFlags: 1

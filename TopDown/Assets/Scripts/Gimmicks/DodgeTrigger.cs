@@ -26,7 +26,10 @@ namespace Matt_Gimmicks
 
                 if (currProjectile.origShooterTag == "Enemy" && SlowMoEffect.Instance.IsInSlowMo == false)
                 {
+                    // The player will also be given a slight bonus when doing so
                     SlowMoEffect.Instance.IsInSlowMo = true;
+
+                    //TODO: Balance the slow mo so that players can't spam it over and over
                 }
             }
         }

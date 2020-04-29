@@ -14,37 +14,56 @@ namespace Matt_Movement
     using Matt_Gimmicks;
     using System.Collections;
 
+    // This describes the movement state of the player at a given moment
+    // Depending on what state the player is in, various actions are allowed/not allowed
+    public enum MovementState
+    {
+        NORMAL,     // Standard state
+        DODGING,    // State in which the player is considered dodging an attack
+        DASHING,    // State in which the player is moving fast for a brief moment
+        COOLDOWN,    // State where the player cannot move or perform any movement actions
+        SUCCESSFUL_DODGE_NORMAL     // State where it is identical to NORMAL, but the player cannot perform dodges
+    }
+
     public class PlayerMovement : Entity
     {
 
-        [Header("Subclass Referencess")]
         [Tooltip("The scene's camera")]
         public Camera mainCamera;
+        [Tooltip("The trigger used to catch the player's dodge")]
+        public DodgeTrigger playerDodge;
 
-        [Tooltip("How fast does the entity move when dodging")]
+        [Header("Player Specific Movements")]
+        [Tooltip("How fast does the player move when dashing")]
         [Range(30f, 60f)]
-        public float dodgeSpeed = 30f;
+        public float dashSpeed = 30f;
+        [Range(0.1f, 2f)]
+        public float dashTime = 0.1f;
+        [Range(0.1f, 2f)]
+        public float dashCoolDown = 0.2f;
+
+        [Space]
+
         [Tooltip("How long does the dodge last")]
         [Range(0.1f, 2f)]
         public float dodgeTime = 0.1f;
         [Tooltip("How long does the dodge cooldown last")]
         [Range(0.1f, 2f)]
-        public float dodgeCoolDownTime = 0.2f;
-        public DodgeTrigger playerDodge;
+        public float dodgeCoolDown = 0.2f;
 
         // Private vars
-        private Vector2 mousePos;       // Stores the coords for the player's mouse
-        private Vector2 moveInput;      // Stores the input for the player movement
-        private bool shootInput;        // Checks if the player is firing
-        private bool dodgeInput;        // Checks if the player is dodging
+        private MovementState playerMovementState = MovementState.NORMAL;       // Gets the player's movement state
+        private Vector2 mousePos;                   // Stores the coords for the player's mouse
+        private Vector2 moveInput;                  // Stores the input for the player movement
+        private bool shootInput;                    // Checks if the player is firing
+        private bool specialMovementInput;          // Checks if the player is performing a special movement input
 
-        protected bool isDodging;               // Is the entity currently dodging?
-        protected bool isInDodgeCoolDown;       // Is the entity in a dodge cool down?
+        private bool inSucessfulDodgeCooldown = false;
 
         // Getter/Setters
-        public bool IsDodging
+        public MovementState GetPlayerMovementState
         {
-            get { return isDodging; }
+            get { return playerMovementState; }
         }
 
         // Handles getting all player input
@@ -60,43 +79,42 @@ namespace Matt_Movement
             // Get player input for firing
             shootInput = Input.GetKey(KeyCode.Mouse0);
 
-            // Gets player input for dodging
-            if (Input.GetKey(KeyCode.Space) && isInDodgeCoolDown == false)
-            {
-                dodgeInput = true;
-            }
-            else
-            {
-                dodgeInput = false;
-            }
+            // Gets player input for special movements
+            specialMovementInput = Input.GetKey(KeyCode.Space);
         }
 
         // Handles movement and player actions
         private void FixedUpdate()
         {
-            if (dodgeInput == true && moveInput != Vector2.zero)
+            if (specialMovementInput == true)
             {
-                // If we input dodge and a movement, we perform the dodge
-                StartCoroutine(DodgeAction(moveInput));
+                if (moveInput.x == 0f && moveInput.y == 0f)
+                {
+                    StartCoroutine(PerformDodge());
+                }
+                else
+                {
+                    StartCoroutine(PerformDash(moveInput));
+                }
             }
             else
             {
-                // If we are not dodging, we do normal movement
-                if (isDodging == false)
+                // If we are able to move, we do normal movement
+                if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
                 {
                     // Moves player
                     MoveEntity();
 
-                    // Rotates player
-                    OrientateEntity(mousePos);
-
                     // Player shoot input
-                    if (shootInput == true && isInDodgeCoolDown == false)
+                    if (shootInput == true)
                     {
                         StartCoroutine(ShootProjectile(mousePos));
                     }
                 }
             }
+
+            // Rotates player
+            OrientateEntity(mousePos);
         }
 
         // Moves the player based on their input
@@ -105,29 +123,46 @@ namespace Matt_Movement
             entityRb.MovePosition(entityRb.position + (moveInput * moveSpeed * Time.fixedDeltaTime));
         }
 
-        // Sets the entity in a dodge state, allowing them to move quickly in a given direction
-        protected IEnumerator DodgeAction(Vector2 dodgeDir)
+        // Performs the dodge action when called on
+        protected IEnumerator PerformDodge()
         {
-            if (isDodging == false && isInDodgeCoolDown == false)
+            if (playerMovementState == MovementState.NORMAL)
             {
-                // We apply a quick force on the entity given the direction passed in
-                isDodging = true;
-                entityRb.AddForce(dodgeDir * dodgeSpeed, ForceMode2D.Impulse);
+                // The player is in the state of dodge for a brief moment
+                playerMovementState = MovementState.DODGING;
+                entityRb.velocity = Vector2.zero;
                 playerDodge.gameObject.SetActive(true);
                 yield return new WaitForSeconds(dodgeTime);
 
-                // When this is reached, the player should not be able to move
+                // Then they are in a state where they cannot do any action
+                playerMovementState = MovementState.COOLDOWN;
                 playerDodge.gameObject.SetActive(false);
-                entityRb.velocity = Vector2.zero;
-                isInDodgeCoolDown = true;
-                isDodging = false;
+                yield return new WaitForSeconds(dodgeCoolDown);
 
-                // Time spent waiting for the player to be able to dodge again
-                yield return new WaitForSeconds(dodgeCoolDownTime);
-                isInDodgeCoolDown = false;
+                // And then they return to normal
+                playerMovementState = MovementState.NORMAL;
+            }
+        }
+
+        // Perform the dash movement when called on
+        protected IEnumerator PerformDash(Vector2 movementDir)
+        {
+            if (playerMovementState == MovementState.NORMAL)
+            {
+                // The player dashes a timed amount of disitance
+                playerMovementState = MovementState.DASHING;
+                entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
+                yield return new WaitForSeconds(dashTime);
+
+                // Then they go into a state where they cannot do anything
+                playerMovementState = MovementState.COOLDOWN;
+                entityRb.velocity = Vector2.zero;
+                yield return new WaitForSeconds(dashCoolDown);
+
+                // And then they are allowed to move again
+                playerMovementState = MovementState.NORMAL;
             }
         }
     }
-
 }
 

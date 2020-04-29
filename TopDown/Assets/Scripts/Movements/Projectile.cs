@@ -23,6 +23,7 @@ namespace Matt_Movement
 
         // Private Vars
         private Rigidbody2D rb;
+        private float timeToDestroy = 0f;
 
         // Sets up all of the components
         private void Awake()
@@ -30,10 +31,23 @@ namespace Matt_Movement
             rb = GetComponent<Rigidbody2D>();
         }
 
-        // Upon creation, the projectile will remove itself
-        private void Start()
+        // Keeps track of how long it will take to remove this object
+        private void Update()
         {
-            Invoke("DestroyItself", 5f);
+            // If slow mo is active, the bullet will be slowed down to destroy
+            if (SlowMoEffect.Instance.IsInSlowMo == true)
+            {
+                timeToDestroy += (Time.deltaTime * SlowMoEffect.Instance.GetSlowDownFactor);
+            }
+            else
+            {
+                timeToDestroy += Time.deltaTime;
+            }
+
+            if (timeToDestroy >= 5f)
+            {
+                DestroyItself();
+            }
         }
 
         // While active, it will move in a straight line
@@ -58,7 +72,6 @@ namespace Matt_Movement
             // Think of this as friendly fire
             if (collision.gameObject.tag != origShooterTag)
             {
-
                 // In general, we only go in here if this projectile can interact with it aka, if it is in the array
                 if (CheckIfTagIsInArray(collision.gameObject.tag))
                 {
@@ -69,17 +82,22 @@ namespace Matt_Movement
                             Destroy(collision.gameObject);
                             break;
                         case "Player":
-                            // Hurt player
+                            // If the game is in slow mo, the bullet does not do anything
+                            if (SlowMoEffect.Instance.IsInSlowMo)
+                            {
+                                return;
+                            }
+
+                            // Else, we hurt player if they are not dodging
                             PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
-                            if (playerMovement.IsDodging == false)
+                            if (playerMovement.GetPlayerMovementState != MovementState.DODGING)
                             {
                                 print("Ouch!");
                             }
                             break;
                         case "Projectile":
                         case "Walls":
-                            // All of these cases just cause the projectile to be destroyed
-                            DestroyItself();
+                            // All of these cases just cause the projectile to be destroyed (no special effects)
                             break;
                     }
                     DestroyItself();

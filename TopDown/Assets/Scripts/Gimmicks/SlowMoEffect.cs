@@ -12,11 +12,14 @@ namespace Matt_Gimmicks
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
         [SerializeField]
-        [Range(1f, 3f)]
+        [Range(1f, 20f)]
+        [Tooltip("How long are entities slowed down?")]
         private float slowDownLength = 2f;              // How long does the slow motion last?
         [SerializeField]
-        [Range(0.01f, 0.1f)]
+        [Range(0.01f, 0.99f)]
+        [Tooltip("How potent is the slow down effect? Smaller number = higher effect")]
         private float slowDownFactor = 0.05f;           // How strong is the slow motion effect
+
         private bool isInSlowMo = false;                // Is the game in slow motion?
         private float timeSinceSlowDown = 0f;           // The amount of time that passed while the game is in slow motion
 

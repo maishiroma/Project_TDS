@@ -15,15 +15,14 @@ namespace Matt_Movement
 
         // Private Vars
         private Rigidbody2D playerRb;       // Caches the player's Rigidbody for future calculations
-        private bool isAttacking;           // Is the enemy attacking?
+        private bool isAggresive;           // Is the enemy in an aggresive state
 
-        private bool isSlowedDown = false;
-
-        // Getter/Setter for the isAttacking boolean
-        public bool IsAttacking
+        // Getter/Setter
+        public bool IsAggresive
         {
-            get { return isAttacking; }
-            set { isAttacking = value; }
+            get { return isAggresive; }
+
+            set { isAggresive = value; }
         }
 
         // Grabs the player's rigidbody component and stores it
@@ -35,17 +34,20 @@ namespace Matt_Movement
         // Handles all movement logic
         private void FixedUpdate()
         {
-            // Moves the enemy
-            MoveEntity();
-
-            // Rotates the enemy so that it is facing the player
-            OrientateEntity(playerRb.position);
-
-            // Handles attacking logic
-            if (isAttacking == true && isSlowedDown == false)
+            // If the player is in range of the enemy, they will give chase and attack
+            if (isAggresive == true)
             {
-                StartCoroutine(ShootProjectile(playerRb.position));
+                MoveEntity();
+
+                // If the enemy is slowed down, they will not shoot
+                if (SlowMoEffect.Instance.IsInSlowMo == false)
+                {
+                    StartCoroutine(ShootProjectile(playerRb.position));
+                }
             }
+
+            // Always rotates the enemy so that it is facing the player
+            OrientateEntity(playerRb.position);
         }
 
         // If the enemy comes into contact with the player, they will be destroyed
@@ -67,12 +69,10 @@ namespace Matt_Movement
             {
                 float newMoveSpeed = moveSpeed * SlowMoEffect.Instance.GetSlowDownFactor;
                 newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, newMoveSpeed * Time.fixedDeltaTime);
-                isSlowedDown = true;
             }
             else
             {
                 newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, moveSpeed * Time.fixedDeltaTime);
-                isSlowedDown = false;
             }
             entityRb.MovePosition(newPos);
         }
