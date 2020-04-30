@@ -97,6 +97,7 @@ namespace Matt_Gimmicks
             GameObject newEnemy = Instantiate(enemySpawn, new Vector2(xRanPos, yRanPos), Quaternion.identity, null);
 
             spawnedObjs.Add(newEnemy);
+            yield return null;
         }
 
         // Removes all null enemies in list

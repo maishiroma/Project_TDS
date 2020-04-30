@@ -45,6 +45,12 @@ namespace Matt_Gimmicks
             get { return slowDownFactor; }
         }
 
+        // Retrieves the value for the duration of the slow down
+        public float GetSlowDownLength
+        {
+            get { return slowDownLength; }
+        }
+
         // Prepares the Instanciation of this object to be a singleton
         private void Awake()
         {

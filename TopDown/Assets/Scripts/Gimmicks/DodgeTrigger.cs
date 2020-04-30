@@ -15,6 +15,8 @@ namespace Matt_Gimmicks
         [Header("Outside Refs")]
         [Tooltip("The hitbox used to determine the sweet spot of the dodge")]
         public BoxCollider2D hitTrigger;
+        [Tooltip("A reference to the player's movement component")]
+        public PlayerMovement player;
 
         // When the dodge is activated, this hitboc will be looking for any attacks coming its way
         // When an attack does come through, slowmo will be acheived.
@@ -26,10 +28,9 @@ namespace Matt_Gimmicks
 
                 if (currProjectile.origShooterTag == "Enemy" && SlowMoEffect.Instance.IsInSlowMo == false)
                 {
-                    // The player will also be given a slight bonus when doing so
+                    // Activate the slow motion effect and grants a player a small bonus
                     SlowMoEffect.Instance.IsInSlowMo = true;
-
-                    //TODO: Balance the slow mo so that players can't spam it over and over
+                    player.StartCoroutine(player.SlowMoBonus());
                 }
             }
         }

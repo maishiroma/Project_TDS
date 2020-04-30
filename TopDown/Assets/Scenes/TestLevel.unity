@@ -526,9 +526,20 @@ Prefab:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 114310292655281806, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1,
+        type: 2}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1385923891}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &1385923891 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114108005312050810, guid: 8e4ed37642bc44ce6ac134d3c1fd5aa1,
+    type: 2}
+  m_PrefabInternal: {fileID: 1383012497}
+  m_Script: {fileID: 11500000, guid: 6634c40af490646fa938d40528325ff4, type: 3}
 --- !u!1001 &1506124649
 Prefab:
   m_ObjectHideFlags: 0

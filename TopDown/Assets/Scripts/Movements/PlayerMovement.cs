@@ -18,10 +18,10 @@ namespace Matt_Movement
     // Depending on what state the player is in, various actions are allowed/not allowed
     public enum MovementState
     {
-        NORMAL,     // Standard state
-        DODGING,    // State in which the player is considered dodging an attack
-        DASHING,    // State in which the player is moving fast for a brief moment
-        COOLDOWN,    // State where the player cannot move or perform any movement actions
+        NORMAL,                     // Standard state
+        DODGING,                    // State in which the player is considered dodging an attack
+        DASHING,                    // State in which the player is moving fast for a brief moment
+        COOLDOWN,                   // State where the player cannot move or perform any movement actions
         SUCCESSFUL_DODGE_NORMAL     // State where it is identical to NORMAL, but the player cannot perform dodges
     }
 
@@ -58,8 +58,6 @@ namespace Matt_Movement
         private bool shootInput;                    // Checks if the player is firing
         private bool specialMovementInput;          // Checks if the player is performing a special movement input
 
-        private bool inSucessfulDodgeCooldown = false;
-
         // Getter/Setters
         public MovementState GetPlayerMovementState
         {
@@ -86,22 +84,15 @@ namespace Matt_Movement
         // Handles movement and player actions
         private void FixedUpdate()
         {
+            // Rotates player
+            OrientateEntity(mousePos);
+
+            // If the player is pressing on the special movement input, they do different actions than normal
             if (specialMovementInput == true)
             {
-                if (moveInput.x == 0f && moveInput.y == 0f)
+                if (playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
                 {
-                    StartCoroutine(PerformDodge());
-                }
-                else
-                {
-                    StartCoroutine(PerformDash(moveInput));
-                }
-            }
-            else
-            {
-                // If we are able to move, we do normal movement
-                if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
-                {
+                    // If the player is in a state where they dodged an attack, they can only do standard movement
                     // Moves player
                     MoveEntity();
 
@@ -111,10 +102,34 @@ namespace Matt_Movement
                         StartCoroutine(ShootProjectile(mousePos));
                     }
                 }
+                else if (playerMovementState == MovementState.NORMAL)
+                {
+                    // If they are in a normal state, they can only do dashes and dodges
+                    if (moveInput.x == 0f && moveInput.y == 0f)
+                    {
+                        // The player performs a dodge ONLY if they are NOT in a special state
+                        StartCoroutine("PerformDodge");
+                    }
+                    else
+                    {
+                        // The player performs a dash
+                        StartCoroutine(PerformDash(moveInput));
+                    }
+                }
             }
+            else if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+            {
+                // As long as the player is in a normal state, they can always do these actions
 
-            // Rotates player
-            OrientateEntity(mousePos);
+                // Moves player
+                MoveEntity();
+
+                // Player shoot input
+                if (shootInput == true)
+                {
+                    StartCoroutine(ShootProjectile(mousePos));
+                }
+            }
         }
 
         // Moves the player based on their input
@@ -124,44 +139,59 @@ namespace Matt_Movement
         }
 
         // Performs the dodge action when called on
-        protected IEnumerator PerformDodge()
+        private IEnumerator PerformDodge()
         {
-            if (playerMovementState == MovementState.NORMAL)
-            {
-                // The player is in the state of dodge for a brief moment
-                playerMovementState = MovementState.DODGING;
-                entityRb.velocity = Vector2.zero;
-                playerDodge.gameObject.SetActive(true);
-                yield return new WaitForSeconds(dodgeTime);
+            // The player is in the state of dodge for a brief moment
+            playerMovementState = MovementState.DODGING;
+            entityRb.velocity = Vector2.zero;
+            playerDodge.gameObject.SetActive(true);
+            yield return new WaitForSeconds(dodgeTime);
 
-                // Then they are in a state where they cannot do any action
-                playerMovementState = MovementState.COOLDOWN;
-                playerDodge.gameObject.SetActive(false);
-                yield return new WaitForSeconds(dodgeCoolDown);
+            // Then they are in a state where they cannot do any action
+            playerMovementState = MovementState.COOLDOWN;
+            playerDodge.gameObject.SetActive(false);
+            yield return new WaitForSeconds(dodgeCoolDown);
 
-                // And then they return to normal
-                playerMovementState = MovementState.NORMAL;
-            }
+            // And then they return to normal
+            playerMovementState = MovementState.NORMAL;
+            yield return null;
         }
 
         // Perform the dash movement when called on
-        protected IEnumerator PerformDash(Vector2 movementDir)
+        private IEnumerator PerformDash(Vector2 movementDir)
         {
-            if (playerMovementState == MovementState.NORMAL)
+            // The player dashes a timed amount of disitance
+            playerMovementState = MovementState.DASHING;
+            entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
+            yield return new WaitForSeconds(dashTime);
+
+            // Then they go into a state where they cannot do anything
+            playerMovementState = MovementState.COOLDOWN;
+            entityRb.velocity = Vector2.zero;
+            yield return new WaitForSeconds(dashCoolDown);
+
+            playerMovementState = MovementState.NORMAL;
+            yield return null;
+        }
+
+        // When called on, the player will be able to move instantly after a dodge.
+        public IEnumerator SlowMoBonus()
+        {
+            if (SlowMoEffect.Instance.IsInSlowMo == true)
             {
-                // The player dashes a timed amount of disitance
-                playerMovementState = MovementState.DASHING;
-                entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
-                yield return new WaitForSeconds(dashTime);
+                // Note: StopCoroutine only works if the coroutine used to create is uses a string argument
+                // This stops the delay that the player suffers from a dodge
+                // However, this also puts the player in a state where they cannot do any more additional dodges for:
+                // 1.5 * the length of the slow down effect
+                StopCoroutine("PerformDodge");
+                playerDodge.gameObject.SetActive(false);
+                playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
+                yield return new WaitForSeconds(SlowMoEffect.Instance.GetSlowDownLength * 1.5f);
 
-                // Then they go into a state where they cannot do anything
-                playerMovementState = MovementState.COOLDOWN;
-                entityRb.velocity = Vector2.zero;
-                yield return new WaitForSeconds(dashCoolDown);
-
-                // And then they are allowed to move again
+                // Once the time is up waited, the player can dodge again.
                 playerMovementState = MovementState.NORMAL;
             }
+            yield return null;
         }
     }
 }
