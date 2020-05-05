@@ -37,6 +37,8 @@ namespace Matt_Movement
             // If the player is in range of the enemy, they will give chase and attack
             if (isAggresive == true)
             {
+                OrientateEntity(playerRb.position);
+
                 MoveEntity();
 
                 // If the enemy is slowed down, they will not shoot
@@ -45,9 +47,6 @@ namespace Matt_Movement
                     StartCoroutine(ShootProjectile(playerRb.position));
                 }
             }
-
-            // Always rotates the enemy so that it is facing the player
-            OrientateEntity(playerRb.position);
         }
 
         // If the enemy comes into contact with the player, they will be destroyed
