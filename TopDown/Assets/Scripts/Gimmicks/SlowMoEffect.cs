@@ -5,11 +5,18 @@
 namespace Matt_Gimmicks
 {
     using UnityEngine;
+    using UnityEngine.Experimental.Rendering.LWRP;
 
     public class SlowMoEffect : MonoBehaviour
     {
         // Static Variables
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
+
+        [Header("External Refs")]
+        [Tooltip("The light the main game used")]
+        public Light2D gameLighting;                    // Ref to the main lighting in the game
+        [Tooltip("The light that the player has")]
+        public Light2D playerLighting;                  // Ref to the light the player has
 
         [SerializeField]
         [Range(1f, 20f)]
@@ -22,6 +29,7 @@ namespace Matt_Gimmicks
 
         private bool isInSlowMo = false;                // Is the game in slow motion?
         private float timeSinceSlowDown = 0f;           // The amount of time that passed while the game is in slow motion
+        private float origLightLevel;                   // Stores the original light level of the game
 
         // Getters/Setters
 
@@ -34,6 +42,10 @@ namespace Matt_Gimmicks
             {
                 if (isInSlowMo == false && value == true)
                 {
+                    //  When the game is set to slow mo, the player glows and the game darkens
+                    gameLighting.intensity = 0.5f;
+                    playerLighting.enabled = true;
+
                     isInSlowMo = value;
                 }
             }
@@ -65,6 +77,12 @@ namespace Matt_Gimmicks
             }
         }
 
+        // Stores the original light in the private vars
+        private void Start()
+        {
+            origLightLevel = gameLighting.intensity;
+        }
+
         // Handles the time duration of the slow down effect
         private void Update()
         {
@@ -74,6 +92,10 @@ namespace Matt_Gimmicks
                 if (timeSinceSlowDown >= slowDownLength)
                 {
                     // Once we reach the duration length, we turn off slow motion
+                    // We also set the lights back to normal
+                    gameLighting.intensity = origLightLevel;
+                    playerLighting.enabled = false;
+
                     isInSlowMo = false;
                     timeSinceSlowDown = 0f;
                 }

@@ -38,7 +38,6 @@ namespace Matt_Movement
             if (isAggresive == true)
             {
                 OrientateEntity(playerRb.position);
-
                 MoveEntity();
 
                 // If the enemy is slowed down, they will not shoot
