@@ -9,11 +9,16 @@ namespace Matt_UI
 {
     using UnityEngine;
     using Matt_Gimmicks;
+    using UnityEngine.Experimental.Rendering.LWRP;
 
     // This script should be on the gameobject that also has the animator and sprite render of the timer ui
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
-    public class SlowMoUI : MonoBehaviour
+    public class TimerIcon : MonoBehaviour
     {
+        [Header("External Refs")]
+        [Tooltip("The light emitting from the timer")]
+        public Light2D timerLight;
+
         // Private vars
         private Animator slowMoAnimatior;        // The animatior that is on the gameObject controlling the sprite
         private SpriteRenderer slowMoSprite;     // The render that will be displaying the sprites
@@ -54,6 +59,7 @@ namespace Matt_UI
             if (hasBeenActivated == false)
             {
                 hasBeenActivated = true;
+                timerLight.enabled = true;
                 slowMoSprite.enabled = true;
                 slowMoAnimatior.SetBool("IsInSlowMo", true);
             }
@@ -65,6 +71,7 @@ namespace Matt_UI
             if (hasBeenActivated == true)
             {
                 hasBeenActivated = false;
+                timerLight.enabled = false;
                 slowMoAnimatior.SetBool("IsInSlowMo", false);
                 slowMoSprite.enabled = false;
             }

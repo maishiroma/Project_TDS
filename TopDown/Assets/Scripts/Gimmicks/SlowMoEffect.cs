@@ -18,6 +18,11 @@ namespace Matt_Gimmicks
         [Tooltip("The light that the player has")]
         public Light2D playerLighting;                  // Ref to the light the player has
 
+        [Header("Light Refs")]
+        [Range(0.1f, 20f)]
+        public float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
+
+        [Header("Slow Motion Vars")]
         [SerializeField]
         [Range(1f, 20f)]
         [Tooltip("How long are entities slowed down?")]
@@ -28,7 +33,7 @@ namespace Matt_Gimmicks
         private float slowDownFactor = 0.05f;           // How strong is the slow motion effect
 
         private bool isInSlowMo = false;                // Is the game in slow motion?
-        private float timeSinceSlowDown = 0f;           // The amount of time that passed while the game is in slow motion
+        private float internalTimer = 0f;               // Used to keep track of slow mo duration and lighting cues
         private float origLightLevel;                   // Stores the original light level of the game
 
         // Getters/Setters
@@ -42,9 +47,9 @@ namespace Matt_Gimmicks
             {
                 if (isInSlowMo == false && value == true)
                 {
-                    //  When the game is set to slow mo, the player glows and the game darkens
-                    gameLighting.intensity = 0.5f;
+                    //  When the game is set to slow mo, the player glows
                     playerLighting.enabled = true;
+                    internalTimer = 0f;
 
                     isInSlowMo = value;
                 }
@@ -88,16 +93,26 @@ namespace Matt_Gimmicks
         {
             if (isInSlowMo)
             {
-                timeSinceSlowDown += Time.deltaTime;
-                if (timeSinceSlowDown >= slowDownLength)
+                // The game light dims to emphasize the slow down
+                gameLighting.intensity = Mathf.Lerp(origLightLevel, slowMoLightIntensity, Mathf.Clamp(internalTimer, 0f, 1f));
+
+                internalTimer += Time.deltaTime;
+                if (internalTimer >= slowDownLength)
                 {
                     // Once we reach the duration length, we turn off slow motion
-                    // We also set the lights back to normal
-                    gameLighting.intensity = origLightLevel;
                     playerLighting.enabled = false;
 
                     isInSlowMo = false;
-                    timeSinceSlowDown = 0f;
+                    internalTimer = 0f;
+                }
+            }
+            else
+            {
+                // When the game is returning to normal lighting, this gradually sets it back
+                if (gameLighting.intensity < origLightLevel)
+                {
+                    internalTimer += Time.deltaTime;
+                    gameLighting.intensity = Mathf.Lerp(slowMoLightIntensity, origLightLevel, Mathf.Clamp(internalTimer, 0f, 1f));
                 }
             }
         }
