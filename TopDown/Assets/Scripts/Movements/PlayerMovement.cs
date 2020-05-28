@@ -84,6 +84,9 @@ namespace Matt_Movement
         // Handles movement and player actions
         private void FixedUpdate()
         {
+            // Checks if the player can recover from a cooldown state after dodging
+            RevertFromSuccessDodgeState();
+
             // Rotates player
             OrientateEntity(mousePos);
 
@@ -138,6 +141,18 @@ namespace Matt_Movement
             entityRb.MovePosition(entityRb.position + (moveInput * moveSpeed * Time.fixedDeltaTime));
         }
 
+        // Reverts the player state from the state where they cannot do any more dodges
+        private void RevertFromSuccessDodgeState()
+        {
+            if (playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+            {
+                if (SlowMoEffect.Instance.isReadyToBeUsed == true)
+                {
+                    playerMovementState = MovementState.NORMAL;
+                }
+            }
+        }
+
         // Performs the dodge action when called on
         private IEnumerator PerformDodge()
         {
@@ -181,18 +196,14 @@ namespace Matt_Movement
             {
                 // Note: StopCoroutine only works if the coroutine used to create is uses a string argument
                 // This stops the delay that the player suffers from a dodge
-                // However, this also puts the player in a state where they cannot do any more additional dodges for:
-                // 1.5 * the length of the slow down effect
+                // However, this also puts the player in a state where they cannot do any more additional dodges
                 StopCoroutine("PerformDodge");
                 playerDodge.gameObject.SetActive(false);
                 playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
-                yield return new WaitForSeconds(SlowMoEffect.Instance.GetSlowDownLength * 1.5f);
-
-                // Once the time is up waited, the player can dodge again.
-                playerMovementState = MovementState.NORMAL;
             }
             yield return null;
         }
+
     }
 }
 

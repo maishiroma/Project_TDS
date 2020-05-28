@@ -5,6 +5,7 @@
 namespace Matt_Gimmicks
 {
     using UnityEngine;
+    using UnityEngine.UI;
     using UnityEngine.Experimental.Rendering.LWRP;
 
     public class SlowMoEffect : MonoBehaviour
@@ -17,24 +18,33 @@ namespace Matt_Gimmicks
         public Light2D gameLighting;                    // Ref to the main lighting in the game
         [Tooltip("The light that the player has")]
         public Light2D playerLighting;                  // Ref to the light the player has
+        [Tooltip("Ref to the UI gauge that acts as the timer")]
+        public Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
 
         [Header("Light Refs")]
         [Range(0.1f, 20f)]
         public float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
 
+        // Private Vars that are exposed in editor only
         [Header("Slow Motion Vars")]
         [SerializeField]
-        [Range(1f, 20f)]
-        [Tooltip("How long are entities slowed down?")]
+        [Range(1f, 40f)]
+        [Tooltip("How long are entities slowed down? Bigger Number = shorter timeframe")]
         private float slowDownLength = 2f;              // How long does the slow motion last?
         [SerializeField]
         [Range(0.01f, 0.99f)]
         [Tooltip("How potent is the slow down effect? Smaller number = higher effect")]
         private float slowDownFactor = 0.05f;           // How strong is the slow motion effect
+        [SerializeField]
+        [Range(1f, 40f)]
+        [Tooltip("How long is the cooldown before using this again? Bigger Number = faster recoveryd")]
+        private float slowDownCoolDown = 2f;            // How long is the cooldown from using slowdown?
 
+        // Private vars that are hidden
+        private bool isReady = true;                    // Indicates if the slowdown ability is ready
         private bool isInSlowMo = false;                // Is the game in slow motion?
-        private float internalTimer = 0f;               // Used to keep track of slow mo duration and lighting cues
         private float origLightLevel;                   // Stores the original light level of the game
+        private float currLightTime;                    // The internal time used for transitions
 
         // Getters/Setters
 
@@ -49,9 +59,9 @@ namespace Matt_Gimmicks
                 {
                     //  When the game is set to slow mo, the player glows
                     playerLighting.enabled = true;
-                    internalTimer = 0f;
-
                     isInSlowMo = value;
+                    currLightTime = 0f;
+                    isReady = false;
                 }
             }
         }
@@ -62,10 +72,9 @@ namespace Matt_Gimmicks
             get { return slowDownFactor; }
         }
 
-        // Retrieves the value for the duration of the slow down
-        public float GetSlowDownLength
+        public bool isReadyToBeUsed
         {
-            get { return slowDownLength; }
+            get { return isReady; }
         }
 
         // Prepares the Instanciation of this object to be a singleton
@@ -94,25 +103,37 @@ namespace Matt_Gimmicks
             if (isInSlowMo)
             {
                 // The game light dims to emphasize the slow down
-                gameLighting.intensity = Mathf.Lerp(origLightLevel, slowMoLightIntensity, Mathf.Clamp(internalTimer, 0f, 1f));
+                currLightTime += Time.deltaTime;
+                gameLighting.intensity = Mathf.Lerp(origLightLevel, slowMoLightIntensity, Mathf.Clamp(currLightTime, 0f, 1f));
 
-                internalTimer += Time.deltaTime;
-                if (internalTimer >= slowDownLength)
+                slowMoGauge.value -= (slowDownLength * Time.deltaTime);
+                if (slowMoGauge.value <= 0)
                 {
                     // Once we reach the duration length, we turn off slow motion
-                    playerLighting.enabled = false;
-
                     isInSlowMo = false;
-                    internalTimer = 0f;
+
+                    // As well as revert the lighting back
+                    playerLighting.enabled = false;
+                    currLightTime = 0f;
                 }
             }
             else
             {
+                // We refill on the gauge, which indicates how long the cooldown will be
+                if (isReady == false)
+                {
+                    slowMoGauge.value += (slowDownCoolDown * Time.deltaTime);
+                    if (slowMoGauge.value >= slowMoGauge.maxValue)
+                    {
+                        // Once the gauge is filled and no slowdown is active, this is ready to be used
+                        isReady = true;
+                    }
+                }
                 // When the game is returning to normal lighting, this gradually sets it back
                 if (gameLighting.intensity < origLightLevel)
                 {
-                    internalTimer += Time.deltaTime;
-                    gameLighting.intensity = Mathf.Lerp(slowMoLightIntensity, origLightLevel, Mathf.Clamp(internalTimer, 0f, 1f));
+                    currLightTime += Time.deltaTime;
+                    gameLighting.intensity = Mathf.Lerp(slowMoLightIntensity, origLightLevel, Mathf.Clamp(currLightTime, 0f, 1f));
                 }
             }
         }
