@@ -12,10 +12,15 @@ namespace Matt_Movement
 
     public class EnemyMovement : Entity
     {
+        [Header("Sub Variables")]
+        [Range(0.1f, 1f)]
+        [Tooltip("The amount of time it takes for this enemy to start shooting when it becomes aggresive")]
+        public float timeToStartShoot = 1f; // Once the enemy gets agressive, how long it takes before it will start firing
 
         // Private Vars
         private Rigidbody2D playerRb;       // Caches the player's Rigidbody for future calculations
         private bool isAggresive;           // Is the enemy in an aggresive state
+        private float currTime;
 
         // Getter/Setter
         public bool IsAggresive
@@ -31,6 +36,19 @@ namespace Matt_Movement
             playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
         }
 
+        // When the enemy is aggresive, a inner timer will count down until the enemy can start attacking
+        private void Update()
+        {
+            if (isAggresive == true && SlowMoEffect.Instance.IsInSlowMo == false)
+            {
+                currTime += Time.deltaTime;
+            }
+            else
+            {
+                currTime = 0;
+            }
+        }
+
         // Handles all movement logic
         private void FixedUpdate()
         {
@@ -41,9 +59,10 @@ namespace Matt_Movement
                 MoveEntity();
 
                 // If the enemy is slowed down, they will not shoot
-                if (SlowMoEffect.Instance.IsInSlowMo == false)
+                if (SlowMoEffect.Instance.IsInSlowMo == false && currTime >= timeToStartShoot)
                 {
                     StartCoroutine(ShootProjectile(playerRb.position));
+                    currTime = 0f;
                 }
             }
         }

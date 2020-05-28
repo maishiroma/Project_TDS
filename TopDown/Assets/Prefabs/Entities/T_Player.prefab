@@ -248,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   attackRate: 0.5
-  entityProjectile: {fileID: 114381718649626900, guid: 5cf12e55416cd45a4be5e1d507765f5c,
+  entityProjectile: {fileID: 236307845066013766, guid: c256fb3359d254fe1a8f0d8212c4431e,
     type: 3}
   frontOfEntity: {fileID: 6123527931405629984}
   mainCamera: {fileID: 0}

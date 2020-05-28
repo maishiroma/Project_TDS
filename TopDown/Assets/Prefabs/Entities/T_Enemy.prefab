@@ -443,9 +443,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   attackRate: 2
-  entityProjectile: {fileID: 114381718649626900, guid: 9fad3651aab9e42a18c9010c45d53e67,
+  entityProjectile: {fileID: 236307845066013766, guid: efbe2f084b1b9498eb5895f25c568432,
     type: 3}
   frontOfEntity: {fileID: 4475613463155862}
+  timeToStartShoot: 0.2
 --- !u!1 &1989628468952448
 GameObject:
   m_ObjectHideFlags: 0
