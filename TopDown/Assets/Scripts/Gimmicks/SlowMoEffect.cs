@@ -13,25 +13,33 @@ namespace Matt_Gimmicks
         // Static Variables
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
+        // Private Vars that are exposed in editor only
         [Header("Gauge Refs")]
         [Tooltip("Ref to the UI gauge that acts as the timer")]
-        public Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
+        [SerializeField]
+        private Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
         [Space]
         [Tooltip("Bellow items are associated with the BG of the gauge, showcasing its various states")]
-        public Image gaugeBG;                           // Ref to the BG of the gauge
-        public Sprite fullGauge;                        // What the gauge will look like when ready
-        public Sprite usingGauge;                       // What the gauge will look like during usages
-        public Sprite refillGauge;                      // What the gauge will look like when refilling
+        [SerializeField]
+        private Image gaugeBG;                           // Ref to the BG of the gauge
+        [SerializeField]
+        private Sprite fullGauge;                        // What the gauge will look like when ready
+        [SerializeField]
+        private Sprite usingGauge;                       // What the gauge will look like during usages
+        [SerializeField]
+        private Sprite refillGauge;                      // What the gauge will look like when refilling
 
         [Header("Light Refs")]
         [Range(0.1f, 20f)]
-        public float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
+        [SerializeField]
+        private float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
         [Tooltip("The light the main game used")]
-        public Light2D gameLighting;                    // Ref to the main lighting in the game
+        [SerializeField]
+        private Light2D gameLighting;                    // Ref to the main lighting in the game
         [Tooltip("The light that the player has")]
-        public Light2D playerLighting;                  // Ref to the light the player has
+        [SerializeField]
+        private Light2D playerLighting;                  // Ref to the light the player has
 
-        // Private Vars that are exposed in editor only
         [Header("Slow Motion Vars")]
         [SerializeField]
         [Range(1f, 40f)]
@@ -43,7 +51,7 @@ namespace Matt_Gimmicks
         private float slowDownFactor = 0.05f;           // How strong is the slow motion effect
         [SerializeField]
         [Range(1f, 40f)]
-        [Tooltip("How long is the cooldown before using this again? Bigger Number = faster recoveryd")]
+        [Tooltip("How long is the cooldown before using this again? Bigger Number = faster recovery")]
         private float slowDownCoolDown = 2f;            // How long is the cooldown from using slowdown?
 
         // Private vars that are hidden
@@ -82,6 +90,7 @@ namespace Matt_Gimmicks
             get { return slowDownFactor; }
         }
 
+        // Returns if the gauge is full and slow mo is not currrently active
         public bool isReadyToBeUsed
         {
             get { return isReady; }
@@ -150,6 +159,12 @@ namespace Matt_Gimmicks
                     gameLighting.intensity = Mathf.Lerp(slowMoLightIntensity, origLightLevel, Mathf.Clamp(currLightTime, 0f, 1f));
                 }
             }
+        }
+
+        // Adds on additional time to slow motion, if able
+        public void AddAdditionalTime(float amount)
+        {
+            slowMoGauge.value = Mathf.Clamp(slowMoGauge.value + amount, 0, slowMoGauge.maxValue);
         }
     }
 }

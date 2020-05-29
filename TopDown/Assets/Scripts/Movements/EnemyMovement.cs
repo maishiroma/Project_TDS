@@ -58,8 +58,7 @@ namespace Matt_Movement
                 OrientateEntity(playerRb.position);
                 MoveEntity();
 
-                // If the enemy is slowed down, they will not shoot
-                if (SlowMoEffect.Instance.IsInSlowMo == false && currTime >= timeToStartShoot)
+                if (currTime >= timeToStartShoot)
                 {
                     StartCoroutine(ShootProjectile(playerRb.position));
                     currTime = 0f;

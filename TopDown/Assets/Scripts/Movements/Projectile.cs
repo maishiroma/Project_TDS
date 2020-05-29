@@ -96,6 +96,11 @@ namespace Matt_Movement
                             }
                             break;
                         case "Projectile":
+                            if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
+                            {
+                                SlowMoEffect.Instance.AddAdditionalTime(10f);
+                            }
+                            break;
                         case "Walls":
                             // All of these cases just cause the projectile to be destroyed (no special effects)
                             break;

@@ -314,8 +314,8 @@ MonoBehaviour:
   enemySpawn: {fileID: 1858098877063218, guid: 5e5f4018807c84c7684fe5085cf6ac39, type: 3}
   enemySpawn_Cloud: {fileID: 1971092924550660, guid: 4c06b15cb08164ae1aa5066eec2cfba5,
     type: 3}
-  maxEnemySpawn: 3
-  spawnRate: 2
+  maxEnemySpawn: 10
+  spawnRate: 1
   leftMostRange: -30
   rightMostRange: 30
   bottomMostRange: -18
