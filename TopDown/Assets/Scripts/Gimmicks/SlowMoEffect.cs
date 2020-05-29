@@ -13,17 +13,23 @@ namespace Matt_Gimmicks
         // Static Variables
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
-        [Header("External Refs")]
-        [Tooltip("The light the main game used")]
-        public Light2D gameLighting;                    // Ref to the main lighting in the game
-        [Tooltip("The light that the player has")]
-        public Light2D playerLighting;                  // Ref to the light the player has
+        [Header("Gauge Refs")]
         [Tooltip("Ref to the UI gauge that acts as the timer")]
         public Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
+        [Space]
+        [Tooltip("Bellow items are associated with the BG of the gauge, showcasing its various states")]
+        public Image gaugeBG;                           // Ref to the BG of the gauge
+        public Sprite fullGauge;                        // What the gauge will look like when ready
+        public Sprite usingGauge;                       // What the gauge will look like during usages
+        public Sprite refillGauge;                      // What the gauge will look like when refilling
 
         [Header("Light Refs")]
         [Range(0.1f, 20f)]
         public float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
+        [Tooltip("The light the main game used")]
+        public Light2D gameLighting;                    // Ref to the main lighting in the game
+        [Tooltip("The light that the player has")]
+        public Light2D playerLighting;                  // Ref to the light the player has
 
         // Private Vars that are exposed in editor only
         [Header("Slow Motion Vars")]
@@ -57,11 +63,15 @@ namespace Matt_Gimmicks
             {
                 if (isInSlowMo == false && value == true)
                 {
-                    //  When the game is set to slow mo, the player glows
-                    playerLighting.enabled = true;
-                    isInSlowMo = value;
+                    // When slow motion is active, we enable various flags to showcase the slow motion
+                    gaugeBG.sprite = usingGauge;
+
                     currLightTime = 0f;
+                    playerLighting.enabled = true;
+
                     isReady = false;
+
+                    isInSlowMo = value;
                 }
             }
         }
@@ -115,6 +125,9 @@ namespace Matt_Gimmicks
                     // As well as revert the lighting back
                     playerLighting.enabled = false;
                     currLightTime = 0f;
+
+                    // And change the gauge to show that it is recharging
+                    gaugeBG.sprite = refillGauge;
                 }
             }
             else
@@ -127,6 +140,7 @@ namespace Matt_Gimmicks
                     {
                         // Once the gauge is filled and no slowdown is active, this is ready to be used
                         isReady = true;
+                        gaugeBG.sprite = fullGauge;
                     }
                 }
                 // When the game is returning to normal lighting, this gradually sets it back
