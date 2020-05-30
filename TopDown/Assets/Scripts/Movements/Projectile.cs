@@ -7,6 +7,7 @@ namespace Matt_Movement
 {
     using UnityEngine;
     using Matt_Gimmicks;
+    using Matt_UI;
 
     public class Projectile : MonoBehaviour
     {
@@ -92,7 +93,11 @@ namespace Matt_Movement
                             PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
                             if (playerMovement.GetPlayerMovementState != MovementState.DODGING)
                             {
-                                print("Ouch!");
+                                // If the player is not invincible, they take damage
+                                if (PlayerHealth.Instance.GetInvincible == false)
+                                {
+                                    PlayerHealth.Instance.CurrentHealth -= 1;
+                                }
                             }
                             break;
                         case "Projectile":

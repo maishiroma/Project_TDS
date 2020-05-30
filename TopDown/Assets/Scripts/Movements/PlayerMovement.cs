@@ -12,6 +12,7 @@ namespace Matt_Movement
     using UnityEngine;
     using Matt_Generics;
     using Matt_Gimmicks;
+    using Matt_UI;
     using System.Collections;
 
     // This describes the movement state of the player at a given moment
@@ -32,6 +33,12 @@ namespace Matt_Movement
         public Camera mainCamera;
         [Tooltip("The trigger used to catch the player's dodge")]
         public DodgeTrigger playerDodge;
+
+        [Header("Player Graphics")]
+        [Tooltip("References to the player's graphics")]
+        public SpriteRenderer playerSprite;
+        public Sprite playerDodgeSprite;
+        public Sprite normalPlayersprite;
 
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
@@ -91,7 +98,7 @@ namespace Matt_Movement
             OrientateEntity(mousePos);
 
             // If the player is pressing on the special movement input, they do different actions than normal
-            if (specialMovementInput == true)
+            if (specialMovementInput == true && PlayerHealth.Instance.GetInvincible == false)
             {
                 if (playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
                 {
@@ -160,11 +167,13 @@ namespace Matt_Movement
             playerMovementState = MovementState.DODGING;
             entityRb.velocity = Vector2.zero;
             playerDodge.gameObject.SetActive(true);
+            playerSprite.sprite = playerDodgeSprite;
             yield return new WaitForSeconds(dodgeTime);
 
             // Then they are in a state where they cannot do any action
             playerMovementState = MovementState.COOLDOWN;
             playerDodge.gameObject.SetActive(false);
+            playerSprite.sprite = normalPlayersprite;
             yield return new WaitForSeconds(dodgeCoolDown);
 
             // And then they return to normal
@@ -200,6 +209,7 @@ namespace Matt_Movement
                 StopCoroutine("PerformDodge");
                 playerDodge.gameObject.SetActive(false);
                 playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
+                playerSprite.sprite = normalPlayersprite;
             }
             yield return null;
         }

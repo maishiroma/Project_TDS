@@ -9,6 +9,7 @@ namespace Matt_Movement
     using UnityEngine;
     using Matt_Generics;
     using Matt_Gimmicks;
+    using Matt_UI;
 
     public class EnemyMovement : Entity
     {
@@ -67,10 +68,16 @@ namespace Matt_Movement
         }
 
         // If the enemy comes into contact with the player, they will be destroyed
+        // But the player will also take damage.
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.tag == "Player")
             {
+                // If the player is not invincible, they take damage
+                if (PlayerHealth.Instance.GetInvincible == false)
+                {
+                    PlayerHealth.Instance.CurrentHealth -= 1;
+                }
                 Destroy(this.gameObject);
             }
         }
