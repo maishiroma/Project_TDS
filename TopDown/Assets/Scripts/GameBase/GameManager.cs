@@ -1,14 +1,11 @@
-﻿/*  This is used to control game flow
- * 
+﻿/*  This is used to control game flow, as well as display certain information in different scenes
+ * This is a static, persistent object, so any information that needs to persist between scenes can be saved in here
  */
 
 namespace Matt_System
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.SceneManagement;
-    using Matt_Gimmicks;
 
     public class GameManager : MonoBehaviour
     {
@@ -16,16 +13,13 @@ namespace Matt_System
         public static GameManager Instance;
 
         // Private vars
-        private bool didGameOver;
-        private int finalScore;
+        private bool didGameOver;           // Saves whether the game is in a game over state
+        private int finalScore;             // Saves the final score amount the player has acheived.
 
+        // Getter/Setters
         public bool DidGameOver
         {
             get { return didGameOver; }
-            set
-            {
-                didGameOver = value;
-            }
         }
 
         public int GetFinalScore
@@ -48,10 +42,11 @@ namespace Matt_System
         }
 
         // Moves the game logic to the game over screen.
-        public void GoToGameOver()
+        // Also saves the result score to a private variable
+        public void GoToGameOver(int resultScore)
         {
             didGameOver = true;
-            finalScore = FindObjectOfType<ScoreSystem>().CurrentScore;
+            finalScore = resultScore;
             SceneManager.LoadScene(0);
         }
 

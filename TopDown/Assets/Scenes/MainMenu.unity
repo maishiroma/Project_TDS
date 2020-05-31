@@ -483,10 +483,10 @@ RectTransform:
   m_Father: {fileID: 1702277095}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -350, y: 0}
-  m_SizeDelta: {x: 550, y: 250}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1520, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272402534
 MonoBehaviour:
@@ -506,13 +506,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'WASD: Move Around
-
-    Left Click: Shoot
-
-    Space + WASD: Dash
-
-    Space: Dodge'
+  m_text: "Controls: \nWASD: Move Around\nLeft Click: Shoot\nSpace + WASD: Dash\nSpace:
+    Dodge\n\nBullet Time Effect: \nDodging a bullet before it hits you slows all actions
+    except yourself for a short duration! Use that to avoid enemies and easily shoot
+    them back!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -547,7 +544,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 257
+  m_textAlignment: 514
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -581,12 +578,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 272402534}
-    characterCount: 67
+    characterCount: 246
     spriteCount: 0
-    spaceCount: 11
-    wordCount: 11
+    spaceCount: 44
+    wordCount: 41
     linkCount: 0
-    lineCount: 4
+    lineCount: 9
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -822,7 +819,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You died! :(
+  m_text: Game Over...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2224,14 +2221,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 133868457}
-        m_MethodName: NavigateToTitle
-        m_Mode: 1
+        m_MethodName: ToggleUIBlobs
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: MainMenu
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1097312970
@@ -2520,12 +2517,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Dodging a bullet before it hits you grants you bullet time! Use that to
-    avoid enemies and defeat them!
-
-
-    Be warned, after you do a bullet time, you cannot use it again for a short while.
-    Pay attention to the gauge to determine if you can do it again.'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2594,13 +2586,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1522697328}
-    characterCount: 249
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 49
-    wordCount: 49
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 9
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -3134,14 +3126,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 133868457}
-        m_MethodName: NavigatetoControls
-        m_Mode: 1
+        m_MethodName: ToggleUIBlobs
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Controls
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1975773763

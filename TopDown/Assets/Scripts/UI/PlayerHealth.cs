@@ -5,10 +5,10 @@
 namespace Matt_UI
 {
     using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
     using Matt_System;
+    using Matt_Gimmicks;
 
     public class PlayerHealth : MonoBehaviour
     {
@@ -75,6 +75,7 @@ namespace Matt_UI
                         currHealth = 0;
                     }
 
+                    // When the player takes damage, they get some invincibility frames
                     StartCoroutine(ToggleInvincibility());
                 }
                 else
@@ -86,6 +87,8 @@ namespace Matt_UI
                     }
                 }
                 currHealth = value;
+
+                // We also briefy display the health meter when the player takes damage
                 StartCoroutine(ToggleHealthVisual());
             }
         }
@@ -123,7 +126,7 @@ namespace Matt_UI
 
             if (currHealth <= 0)
             {
-                GameManager.Instance.GoToGameOver();
+                GameManager.Instance.GoToGameOver(FindObjectOfType<ScoreSystem>().CurrentScore);
             }
         }
 
