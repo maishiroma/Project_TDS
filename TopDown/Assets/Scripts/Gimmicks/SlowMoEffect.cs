@@ -102,7 +102,6 @@ namespace Matt_Gimmicks
             if (Instance == null)
             {
                 Instance = this;
-                DontDestroyOnLoad(this.gameObject);
             }
             else
             {

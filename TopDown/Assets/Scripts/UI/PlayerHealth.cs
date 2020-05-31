@@ -8,6 +8,7 @@ namespace Matt_UI
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
+    using Matt_System;
 
     public class PlayerHealth : MonoBehaviour
     {
@@ -101,7 +102,6 @@ namespace Matt_UI
             if (Instance == null)
             {
                 Instance = this;
-                DontDestroyOnLoad(this);
             }
             else
             {
@@ -120,6 +120,11 @@ namespace Matt_UI
         private void Update()
         {
             UpdateHealthVisual();
+
+            if (currHealth <= 0)
+            {
+                GameManager.Instance.GoToGameOver();
+            }
         }
 
         // Moves the UI to where the player is

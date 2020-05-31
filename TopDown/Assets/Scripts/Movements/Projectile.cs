@@ -11,6 +11,8 @@ namespace Matt_Movement
 
     public class Projectile : MonoBehaviour
     {
+        // Private Static Vars
+        private static ScoreSystem scoreSystem;
 
         [Header("General Vars")]
         [Tooltip("The travel speed of the projectile. Shpuld be a high value: i.e. 1000")]
@@ -30,6 +32,14 @@ namespace Matt_Movement
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+        }
+
+        private void Start()
+        {
+            if (scoreSystem == null)
+            {
+                scoreSystem = FindObjectOfType<ScoreSystem>();
+            }
         }
 
         // Keeps track of how long it will take to remove this object
@@ -79,7 +89,8 @@ namespace Matt_Movement
                     switch (collision.gameObject.tag)
                     {
                         case "Enemy":
-                            // Damage Enemy
+                            // Kills Enemy
+                            scoreSystem.IncrementScore(3);
                             Destroy(collision.gameObject);
                             break;
                         case "Player":
@@ -101,8 +112,10 @@ namespace Matt_Movement
                             }
                             break;
                         case "Projectile":
+                            // If we shoot an enemy projectime, we add points as well as help refill the slowmo meter
                             if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
                             {
+                                scoreSystem.IncrementScore(1);
                                 SlowMoEffect.Instance.AddAdditionalTime(10f);
                             }
                             break;

@@ -97,27 +97,16 @@ namespace Matt_Movement
             // Rotates player
             OrientateEntity(mousePos);
 
-            // If the player is pressing on the special movement input, they do different actions than normal
-            if (specialMovementInput == true && PlayerHealth.Instance.GetInvincible == false)
+            // The player can do any movement option as long as they are not in cooldown
+            if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
             {
-                if (playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+                if (specialMovementInput == true)
                 {
-                    // If the player is in a state where they dodged an attack, they can only do standard movement
-                    // Moves player
-                    MoveEntity();
-
-                    // Player shoot input
-                    if (shootInput == true)
+                    // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
+                    // invincible
+                    if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.GetInvincible == false)
                     {
-                        StartCoroutine(ShootProjectile(mousePos));
-                    }
-                }
-                else if (playerMovementState == MovementState.NORMAL)
-                {
-                    // If they are in a normal state, they can only do dashes and dodges
-                    if (moveInput.x == 0f && moveInput.y == 0f)
-                    {
-                        // The player performs a dodge ONLY if they are NOT in a special state
+                        // The player performs a dodge
                         StartCoroutine("PerformDodge");
                     }
                     else
@@ -126,18 +115,16 @@ namespace Matt_Movement
                         StartCoroutine(PerformDash(moveInput));
                     }
                 }
-            }
-            else if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
-            {
-                // As long as the player is in a normal state, they can always do these actions
-
-                // Moves player
-                MoveEntity();
-
-                // Player shoot input
-                if (shootInput == true)
+                else
                 {
-                    StartCoroutine(ShootProjectile(mousePos));
+                    // Moves player
+                    MoveEntity();
+
+                    // Player shoot input
+                    if (shootInput == true)
+                    {
+                        StartCoroutine(ShootProjectile(mousePos));
+                    }
                 }
             }
         }
@@ -184,6 +171,8 @@ namespace Matt_Movement
         // Perform the dash movement when called on
         private IEnumerator PerformDash(Vector2 movementDir)
         {
+            MovementState oldState = playerMovementState;
+
             // The player dashes a timed amount of disitance
             playerMovementState = MovementState.DASHING;
             entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
@@ -194,7 +183,8 @@ namespace Matt_Movement
             entityRb.velocity = Vector2.zero;
             yield return new WaitForSeconds(dashCoolDown);
 
-            playerMovementState = MovementState.NORMAL;
+            // We revert to the state the player was in when they came into this function
+            playerMovementState = oldState;
             yield return null;
         }
 
