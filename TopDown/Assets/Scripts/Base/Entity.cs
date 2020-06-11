@@ -12,6 +12,9 @@ namespace Matt_Generics
 
     public abstract class Entity : MonoBehaviour
     {
+        [Header("Graphical Variables")]
+        public Animator entityGraphics;        // The animatior that is on the gameObject controlling the sprite
+        public SpriteRenderer entityRenderer;     // The render that will be displaying the sprites
 
         [Header("Movement Variables")]
         [Tooltip("The speed of the character")]
@@ -65,6 +68,7 @@ namespace Matt_Generics
         {
             if (hasFired == false)
             {
+                entityGraphics.SetBool("is_attacking", true);
                 Quaternion shotRotation = Quaternion.FromToRotation(Vector2.up, posToShootAt - entityRb.position);
                 Projectile bulletShot = Instantiate(entityProjectile, frontOfEntity.position, shotRotation, null);
                 bulletShot.origShooterTag = gameObject.tag;
@@ -72,6 +76,7 @@ namespace Matt_Generics
                 hasFired = true;
                 yield return new WaitForSeconds(attackRate);
                 hasFired = false;
+                entityGraphics.SetBool("is_attacking", false);
             }
             yield return null;
         }
