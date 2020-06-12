@@ -34,12 +34,6 @@ namespace Matt_Movement
         [Tooltip("The trigger used to catch the player's dodge")]
         public DodgeTrigger playerDodge;
 
-        [Header("Player Graphics")]
-        [Tooltip("References to the player's graphics")]
-        public SpriteRenderer playerSprite;
-        public Sprite playerDodgeSprite;
-        public Sprite normalPlayersprite;
-
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
         [Range(30f, 60f)]
@@ -133,6 +127,15 @@ namespace Matt_Movement
         protected override void MoveEntity()
         {
             entityRb.MovePosition(entityRb.position + (moveInput * moveSpeed * Time.fixedDeltaTime));
+
+            if (moveInput == Vector2.zero)
+            {
+                entityGraphics.SetBool("is_moving", false);
+            }
+            else
+            {
+                entityGraphics.SetBool("is_moving", true);
+            }
         }
 
         // Reverts the player state from the state where they cannot do any more dodges
@@ -152,18 +155,18 @@ namespace Matt_Movement
         {
             // The player is in the state of dodge for a brief moment
             playerMovementState = MovementState.DODGING;
+            entityGraphics.SetBool("is_dodging", true);
             entityRb.velocity = Vector2.zero;
             playerDodge.gameObject.SetActive(true);
-            playerSprite.sprite = playerDodgeSprite;
             yield return new WaitForSeconds(dodgeTime);
 
             // Then they are in a state where they cannot do any action
             playerMovementState = MovementState.COOLDOWN;
             playerDodge.gameObject.SetActive(false);
-            playerSprite.sprite = normalPlayersprite;
             yield return new WaitForSeconds(dodgeCoolDown);
 
             // And then they return to normal
+            entityGraphics.SetBool("is_dodging", false);
             playerMovementState = MovementState.NORMAL;
             yield return null;
         }
@@ -174,11 +177,13 @@ namespace Matt_Movement
             MovementState oldState = playerMovementState;
 
             // The player dashes a timed amount of disitance
+            entityGraphics.SetBool("is_dashing", true);
             playerMovementState = MovementState.DASHING;
             entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
             yield return new WaitForSeconds(dashTime);
 
             // Then they go into a state where they cannot do anything
+            entityGraphics.SetBool("is_dashing", false);
             playerMovementState = MovementState.COOLDOWN;
             entityRb.velocity = Vector2.zero;
             yield return new WaitForSeconds(dashCoolDown);
@@ -197,9 +202,9 @@ namespace Matt_Movement
                 // This stops the delay that the player suffers from a dodge
                 // However, this also puts the player in a state where they cannot do any more additional dodges
                 StopCoroutine("PerformDodge");
+                entityGraphics.SetBool("is_dodging", false);
                 playerDodge.gameObject.SetActive(false);
                 playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
-                playerSprite.sprite = normalPlayersprite;
             }
             yield return null;
         }

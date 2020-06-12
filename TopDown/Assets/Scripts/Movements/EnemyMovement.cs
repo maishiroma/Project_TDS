@@ -98,6 +98,15 @@ namespace Matt_Movement
                 newPos = Vector2.MoveTowards(entityRb.position, playerRb.position, moveSpeed * Time.fixedDeltaTime);
             }
             entityRb.MovePosition(newPos);
+
+            if (isAggresive == false)
+            {
+                entityGraphics.SetBool("is_moving", false);
+            }
+            else
+            {
+                entityGraphics.SetBool("is_moving", true);
+            }
         }
     }
 }

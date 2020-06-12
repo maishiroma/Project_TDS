@@ -9,11 +9,17 @@ namespace Matt_UI
     using UnityEngine.UI;
     using Matt_System;
     using Matt_Gimmicks;
+    using Matt_Movement;
 
     public class PlayerHealth : MonoBehaviour
     {
         // Static variables
         public static PlayerHealth Instance;
+
+        //Public Variables
+        [Header("Player Refs")]
+        [Tooltip("Ref to the player movement component")]
+        public PlayerMovement playerMovement;
 
         // Private vars that are exposed in editor
         [Header("Positioning Vars")]
@@ -26,14 +32,6 @@ namespace Matt_UI
         [SerializeField]
         [Tooltip("The offset that is applied to the UI when displayed")]
         private Vector2 offset;                  // Offset to position the UI
-
-        [Header("Player Graphics")]
-        [SerializeField]
-        [Tooltip("Ref to the player's graphics")]
-        private SpriteRenderer playerGraphics;
-        [SerializeField]
-        [Tooltip("Ref to the player's graphics")]
-        private Sprite playerInvincible;
 
         [Header("UI Elements")]
         [SerializeField]
@@ -178,12 +176,10 @@ namespace Matt_UI
         // Keeps track of the invincible duration
         private IEnumerator ToggleInvincibility()
         {
-            Sprite orig = playerGraphics.sprite;
-
-            playerGraphics.sprite = playerInvincible;
+            playerMovement.entityGraphics.SetBool("is_damaged", true);
             isInvincible = true;
             yield return new WaitForSeconds(invinciTime);
-            playerGraphics.sprite = orig;
+            playerMovement.entityGraphics.SetBool("is_damaged", false);
             isInvincible = false;
         }
     }
