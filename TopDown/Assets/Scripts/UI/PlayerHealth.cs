@@ -177,9 +177,12 @@ namespace Matt_UI
         private IEnumerator ToggleInvincibility()
         {
             playerMovement.entityGraphics.SetBool("is_damaged", true);
+            Color old = playerMovement.entityRenderer.material.color;
+            playerMovement.entityRenderer.material.color = new Color(old.r, old.g, old.b, 0.5f);
             isInvincible = true;
             yield return new WaitForSeconds(invinciTime);
             playerMovement.entityGraphics.SetBool("is_damaged", false);
+            playerMovement.entityRenderer.material.color = old;
             isInvincible = false;
         }
     }

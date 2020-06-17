@@ -276,9 +276,6 @@ MonoBehaviour:
   frontOfEntity: {fileID: 6123527931405629984}
   mainCamera: {fileID: 0}
   playerDodge: {fileID: 6159954190429778324}
-  playerSprite: {fileID: 6204820334880679464}
-  playerDodgeSprite: {fileID: 21300000, guid: e127f9c7377584197a3e38cfdc2c4909, type: 3}
-  normalPlayersprite: {fileID: 21300000, guid: 8ef80a3c9489e49c08b88972079b8af7, type: 3}
   dashSpeed: 50
   dashTime: 0.2
   dashCoolDown: 0.1

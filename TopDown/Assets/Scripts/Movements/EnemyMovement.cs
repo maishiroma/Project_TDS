@@ -28,7 +28,20 @@ namespace Matt_Movement
         {
             get { return isAggresive; }
 
-            set { isAggresive = value; }
+            set
+            {
+                //// Depending on the enemy's fire rate, we slow down the enemy's attack animation to fit the need
+                //if (value == true)
+                //{
+                //    entityGraphics.speed /= attackRate;
+                //}
+                //else
+                //{
+                //    entityGraphics.speed = 1f;
+                //}
+
+                isAggresive = value;
+            }
         }
 
         // Grabs the player's rigidbody component and stores it

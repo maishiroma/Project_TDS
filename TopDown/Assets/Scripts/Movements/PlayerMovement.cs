@@ -58,6 +58,7 @@ namespace Matt_Movement
         private Vector2 moveInput;                  // Stores the input for the player movement
         private bool shootInput;                    // Checks if the player is firing
         private bool specialMovementInput;          // Checks if the player is performing a special movement input
+        private float prevDis;                      // Stores a ref to the disitance that was between the player and the mouse
 
         // Getter/Setters
         public MovementState GetPlayerMovementState
@@ -123,9 +124,28 @@ namespace Matt_Movement
             }
         }
 
+        // Handles a slight graphical issue with dashing as the player
+        private void LateUpdate()
+        {
+            if (playerMovementState == MovementState.DASHING)
+            {
+                // If the player is dashing away from the mouse, they are "reversed" so it looks like
+                // They are running away properly
+                if (Mathf.Sign(prevDis - Vector2.Distance(entityRb.position, mousePos)) < 0)
+                {
+                    entityRenderer.flipY = true;
+                }
+            }
+            else
+            {
+                entityRenderer.flipY = false;
+            }
+        }
+
         // Moves the player based on their input
         protected override void MoveEntity()
         {
+            prevDis = Vector2.Distance(entityRb.position, mousePos);
             entityRb.MovePosition(entityRb.position + (moveInput * moveSpeed * Time.fixedDeltaTime));
 
             if (moveInput == Vector2.zero)
