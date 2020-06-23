@@ -22,6 +22,8 @@ namespace Matt_Gimmicks
         public int maxEnemySpawn;
         [Tooltip("How fast does this spawner spawn enemies")]
         public float spawnRate;
+        [Tooltip("The layermask that holds all of the level terrain")]
+        public LayerMask terrainLevel;
 
         [Header("Random Range Vars")]
         [Tooltip("The smallest x pos that enemies can spawn from")]
@@ -87,14 +89,22 @@ namespace Matt_Gimmicks
         // Spawns an enemy at a random position
         private IEnumerator SpawnEnemy()
         {
-            float xRanPos = Random.Range(leftMostRange, rightMostRange);
-            float yRanPos = Random.Range(bottomMostRange, topMostRange);
+            Collider2D[] collisions = new Collider2D[3];
+            Vector2 spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
 
-            GameObject enemyCloud = Instantiate(enemySpawn_Cloud, new Vector2(xRanPos, yRanPos), Quaternion.identity, null);
+            // Makes sure that the enemy does not spawn in a wall or anything solid
+            int numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
+            while (numb > 0)
+            {
+                spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
+                numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
+            }
+
+            GameObject enemyCloud = Instantiate(enemySpawn_Cloud, spawnPos, Quaternion.identity, null);
             yield return new WaitForSeconds(1f);
 
             Destroy(enemyCloud);
-            GameObject newEnemy = Instantiate(enemySpawn, new Vector2(xRanPos, yRanPos), Quaternion.identity, null);
+            GameObject newEnemy = Instantiate(enemySpawn, spawnPos, Quaternion.identity, null);
 
             spawnedObjs.Add(newEnemy);
             yield return null;
