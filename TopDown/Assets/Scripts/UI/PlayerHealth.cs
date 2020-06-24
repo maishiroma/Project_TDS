@@ -20,6 +20,8 @@ namespace Matt_UI
         [Header("Player Refs")]
         [Tooltip("Ref to the player movement component")]
         public PlayerMovement playerMovement;
+        [Tooltip("Ref to the player score")]
+        public ScoreSystem playerScore;
 
         // Private vars that are exposed in editor
         [Header("Positioning Vars")]
@@ -124,7 +126,7 @@ namespace Matt_UI
 
             if (currHealth <= 0)
             {
-                GameManager.Instance.GoToGameOver(FindObjectOfType<ScoreSystem>().CurrentScore);
+                GameManager.Instance.GoToGameOver(playerScore.CurrentScore);
             }
         }
 
@@ -177,12 +179,9 @@ namespace Matt_UI
         private IEnumerator ToggleInvincibility()
         {
             playerMovement.entityGraphics.SetBool("is_damaged", true);
-            Color old = playerMovement.entityRenderer.material.color;
-            playerMovement.entityRenderer.material.color = new Color(old.r, old.g, old.b, 0.5f);
             isInvincible = true;
             yield return new WaitForSeconds(invinciTime);
             playerMovement.entityGraphics.SetBool("is_damaged", false);
-            playerMovement.entityRenderer.material.color = old;
             isInvincible = false;
         }
     }

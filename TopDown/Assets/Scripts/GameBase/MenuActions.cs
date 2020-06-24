@@ -64,6 +64,7 @@ namespace Matt_UI
                     MainMenu_Blob.SetActive(true);
                     break;
                 case "GameOver":
+                    finalScore_text.text = "Total Score: " + GameManager.Instance.GetFinalScore.ToString();
                     GameOver_Blob.SetActive(true);
                     break;
                 case "Controls":

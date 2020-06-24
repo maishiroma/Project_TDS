@@ -1323,6 +1323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 1891124767}
+  playerScore: {fileID: 686723064}
   player: {fileID: 1891124766}
   mainCamera: {fileID: 822010244}
   offset: {x: 0, y: 75}

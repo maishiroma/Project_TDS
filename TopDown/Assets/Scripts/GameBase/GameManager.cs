@@ -6,6 +6,7 @@ namespace Matt_System
 {
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using Matt_Gimmicks;
 
     public class GameManager : MonoBehaviour
     {
@@ -45,8 +46,8 @@ namespace Matt_System
         // Also saves the result score to a private variable
         public void GoToGameOver(int resultScore)
         {
-            didGameOver = true;
             finalScore = resultScore;
+            didGameOver = true;
             SceneManager.LoadScene(0);
         }
 
