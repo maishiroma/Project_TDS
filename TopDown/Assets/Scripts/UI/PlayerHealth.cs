@@ -75,6 +75,9 @@ namespace Matt_UI
                         currHealth = 0;
                     }
 
+                    // The player will be in hitstun for a little while
+                    playerMovement.StartCoroutine(playerMovement.EnactHitStun());
+
                     // When the player takes damage, they get some invincibility frames
                     StartCoroutine(ToggleInvincibility());
                 }

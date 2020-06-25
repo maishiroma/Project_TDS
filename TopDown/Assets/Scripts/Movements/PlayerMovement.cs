@@ -23,7 +23,8 @@ namespace Matt_Movement
         DODGING,                    // State in which the player is considered dodging an attack
         DASHING,                    // State in which the player is moving fast for a brief moment
         COOLDOWN,                   // State where the player cannot move or perform any movement actions
-        SUCCESSFUL_DODGE_NORMAL     // State where it is identical to NORMAL, but the player cannot perform dodges
+        SUCCESSFUL_DODGE_NORMAL,    // State where it is identical to NORMAL, but the player cannot perform dodges
+        STUNNED                     // State where the player cannot move, due to hitstun from an enemy
     }
 
     public class PlayerMovement : Entity
@@ -42,6 +43,9 @@ namespace Matt_Movement
         public float dashTime = 0.1f;
         [Range(0.1f, 2f)]
         public float dashCoolDown = 0.2f;
+        [Tooltip("How long does the player stay stunned when damaged?")]
+        [Range(0.1f, 1f)]
+        public float stunTime = 0.5f;
 
         [Space]
 
@@ -69,56 +73,64 @@ namespace Matt_Movement
         // Handles getting all player input
         private void Update()
         {
-            // Get player Input for movement
-            moveInput.x = Input.GetAxisRaw("Horizontal");
-            moveInput.y = Input.GetAxisRaw("Vertical");
+            // If the player is stunned, they can't move
+            if (playerMovementState != MovementState.STUNNED)
+            {
+                // Get player Input for movement
+                moveInput.x = Input.GetAxisRaw("Horizontal");
+                moveInput.y = Input.GetAxisRaw("Vertical");
 
-            // Get player input for direction
-            mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                // Get player input for direction
+                mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-            // Get player input for firing
-            shootInput = Input.GetKey(KeyCode.Mouse0);
+                // Get player input for firing
+                shootInput = Input.GetKey(KeyCode.Mouse0);
 
-            // Gets player input for special movements
-            specialMovementInput = Input.GetKey(KeyCode.Space);
+                // Gets player input for special movements
+                specialMovementInput = Input.GetKey(KeyCode.Space);
+            }
         }
 
         // Handles movement and player actions
         private void FixedUpdate()
         {
-            // Checks if the player can recover from a cooldown state after dodging
-            RevertFromSuccessDodgeState();
-
-            // Rotates player
-            OrientateEntity(mousePos);
-
-            // The player can do any movement option as long as they are not in cooldown
-            if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+            // If the player is stunned, they can't do anything
+            if (playerMovementState != MovementState.STUNNED)
             {
-                if (specialMovementInput == true)
+                // Checks if the player can recover from a cooldown state after dodging
+                RevertFromSuccessDodgeState();
+
+                // Rotates player
+                OrientateEntity(mousePos);
+
+                // The player can do any movement option as long as they are not in cooldown
+                if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
                 {
-                    // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
-                    // invincible
-                    if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.GetInvincible == false)
+                    if (specialMovementInput == true)
                     {
-                        // The player performs a dodge
-                        StartCoroutine("PerformDodge");
+                        // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
+                        // invincible
+                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.GetInvincible == false)
+                        {
+                            // The player performs a dodge
+                            StartCoroutine("PerformDodge");
+                        }
+                        else
+                        {
+                            // The player performs a dash
+                            StartCoroutine(PerformDash(moveInput));
+                        }
                     }
                     else
                     {
-                        // The player performs a dash
-                        StartCoroutine(PerformDash(moveInput));
-                    }
-                }
-                else
-                {
-                    // Moves player
-                    MoveEntity();
+                        // Moves player
+                        MoveEntity();
 
-                    // Player shoot input
-                    if (shootInput == true)
-                    {
-                        StartCoroutine(ShootProjectile(mousePos));
+                        // Player shoot input
+                        if (shootInput == true)
+                        {
+                            StartCoroutine(ShootProjectile(mousePos));
+                        }
                     }
                 }
             }
@@ -158,6 +170,13 @@ namespace Matt_Movement
             }
         }
 
+        // Helper function that stops all player movement
+        private void StopMovement()
+        {
+            entityRb.velocity = Vector2.zero;
+            entityRb.angularVelocity = 0f;
+        }
+
         // Reverts the player state from the state where they cannot do any more dodges
         private void RevertFromSuccessDodgeState()
         {
@@ -176,7 +195,7 @@ namespace Matt_Movement
             // The player is in the state of dodge for a brief moment
             playerMovementState = MovementState.DODGING;
             entityGraphics.SetBool("is_dodging", true);
-            entityRb.velocity = Vector2.zero;
+            StopMovement();
             playerDodge.gameObject.SetActive(true);
             yield return new WaitForSeconds(dodgeTime);
 
@@ -205,7 +224,7 @@ namespace Matt_Movement
             // Then they go into a state where they cannot do anything
             entityGraphics.SetBool("is_dashing", false);
             playerMovementState = MovementState.COOLDOWN;
-            entityRb.velocity = Vector2.zero;
+            StopMovement();
             yield return new WaitForSeconds(dashCoolDown);
 
             // We revert to the state the player was in when they came into this function
@@ -227,6 +246,19 @@ namespace Matt_Movement
                 playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
             }
             yield return null;
+        }
+
+        // When called, the player will experience hitstun, meaning they won't be able to move
+        // This is called when the player takes damage
+        public IEnumerator EnactHitStun()
+        {
+            if (playerMovementState != MovementState.STUNNED)
+            {
+                playerMovementState = MovementState.STUNNED;
+                StopMovement();
+                yield return new WaitForSeconds(stunTime);
+                playerMovementState = MovementState.NORMAL;
+            }
         }
 
     }

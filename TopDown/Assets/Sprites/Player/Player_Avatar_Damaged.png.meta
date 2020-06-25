@@ -1,52 +1,28 @@
 fileFormatVersion: 2
-guid: 9460c9fe8ac75493abc498b64933d3de
+guid: 95794151353bc46f4b8fef480d3421a1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1447472240058402766
-    second: Player_Avatar_0
+      213: -8413414341668365650
+    second: Player_Avatar_Damaged_0
   - first:
-      213: 4743935676545653513
-    second: Player_Avatar_1
+      213: 7183938941014560308
+    second: Player_Avatar_Damaged_1
   - first:
-      213: -3283472272639947498
-    second: Player_Avatar_2
+      213: 6491361217595869123
+    second: Player_Avatar_Damaged_2
   - first:
-      213: -4055051909328207936
-    second: Player_Avatar_3
+      213: -7654449723307043178
+    second: Player_Avatar_Damaged_3
   - first:
-      213: -1705384440712623509
-    second: Player_Avatar_4
+      213: 4201910817760026688
+    second: Player_Avatar_Damaged_4
   - first:
-      213: -1282523172115165684
-    second: Player_Avatar_5
+      213: 7065493494736298502
+    second: Player_Avatar_Damaged_5
   - first:
-      213: 6887657540091783639
-    second: Player_Avatar_6
-  - first:
-      213: 4678549628298363614
-    second: Player_Avatar_7
-  - first:
-      213: 1978130456537122423
-    second: Player_Avatar_8
-  - first:
-      213: 3820871155599621539
-    second: Player_Avatar_9
-  - first:
-      213: -4586124995685676919
-    second: Player_Avatar_10
-  - first:
-      213: 3110061803662613839
-    second: Player_Avatar_11
-  - first:
-      213: -1948109689613673342
-    second: Player_Avatar_12
-  - first:
-      213: 6623453757002162818
-    second: Player_Avatar_13
-  - first:
-      213: -7876134166691494761
-    second: Player_Avatar_14
+      213: -5984696491210956320
+    second: Player_Avatar_Damaged_6
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -131,7 +107,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_Avatar_0
+      name: Player_Avatar_Damaged_0
       rect:
         serializedVersion: 2
         x: 0
@@ -145,14 +121,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6251f03498ed1442fa4bd23d64204de1
-      internalID: -1447472240058402766
+      spriteID: 572f0200a8faa40288392d0882a67887
+      internalID: -8413414341668365650
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_1
+      name: Player_Avatar_Damaged_1
       rect:
         serializedVersion: 2
         x: 300
@@ -166,14 +142,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4bbced4d5a87b49d7afbcd0974a0824d
-      internalID: 4743935676545653513
+      spriteID: 9686277f6a44a417e8e5a5f228830042
+      internalID: 7183938941014560308
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_2
+      name: Player_Avatar_Damaged_2
       rect:
         serializedVersion: 2
         x: 600
@@ -187,14 +163,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 09d9ebf1c0bf54c3297a02a8da60a015
-      internalID: -3283472272639947498
+      spriteID: 93fd24f997bfc45f6b2fa7076afcf75d
+      internalID: 6491361217595869123
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_3
+      name: Player_Avatar_Damaged_3
       rect:
         serializedVersion: 2
         x: 900
@@ -208,14 +184,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a39df8a366cb84356bea92ee3e8052f5
-      internalID: -4055051909328207936
+      spriteID: 86fc94c199f094c98855588cc7d35f9b
+      internalID: -7654449723307043178
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_4
+      name: Player_Avatar_Damaged_4
       rect:
         serializedVersion: 2
         x: 0
@@ -229,14 +205,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1686e8f7e141f4d1789ceddce89bc5e9
-      internalID: -1705384440712623509
+      spriteID: 6939a3ab69e454a148b19d40256d6ca1
+      internalID: 4201910817760026688
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_5
+      name: Player_Avatar_Damaged_5
       rect:
         serializedVersion: 2
         x: 300
@@ -250,14 +226,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae66ff966dc9540778f0ba1bd5462093
-      internalID: -1282523172115165684
+      spriteID: 00e2c88243fab4d6ab37d66e77598271
+      internalID: 7065493494736298502
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_Avatar_6
+      name: Player_Avatar_Damaged_6
       rect:
         serializedVersion: 2
         x: 600
@@ -271,71 +247,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fc2903bededfb41f287b810d2226cd57
-      internalID: 6887657540091783639
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Player_Avatar_7
-      rect:
-        serializedVersion: 2
-        x: 900
-        y: 600
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 07e4c52126ae74fd2b77fb707b1086b9
-      internalID: 4678549628298363614
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Player_Avatar_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 300
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 58ff12ae853d5446b97bb839b78f80d6
-      internalID: 1978130456537122423
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Player_Avatar_9
-      rect:
-        serializedVersion: 2
-        x: 300
-        y: 300
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 773579f5d3e1841d0810c130e57ea4c8
-      internalID: 3820871155599621539
+      spriteID: 4a8e4d5082bc549aebe81557e6323c65
+      internalID: -5984696491210956320
       vertices: []
       indices: 
       edges: []
