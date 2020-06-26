@@ -87,7 +87,7 @@ namespace Matt_Movement
                 shootInput = Input.GetKey(KeyCode.Mouse0);
 
                 // Gets player input for special movements
-                specialMovementInput = Input.GetKey(KeyCode.Space);
+                specialMovementInput = Input.GetKeyDown(KeyCode.Space);
             }
         }
 
@@ -110,7 +110,7 @@ namespace Matt_Movement
                     {
                         // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
                         // invincible
-                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.GetInvincible == false)
+                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.IsInvincible == false)
                         {
                             // The player performs a dodge
                             StartCoroutine("PerformDodge");
@@ -173,6 +173,7 @@ namespace Matt_Movement
         // Helper function that stops all player movement
         private void StopMovement()
         {
+            entityGraphics.SetBool("is_moving", false);
             entityRb.velocity = Vector2.zero;
             entityRb.angularVelocity = 0f;
         }
@@ -243,6 +244,7 @@ namespace Matt_Movement
                 StopCoroutine("PerformDodge");
                 entityGraphics.SetBool("is_dodging", false);
                 playerDodge.gameObject.SetActive(false);
+
                 playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
             }
             yield return null;
@@ -254,10 +256,28 @@ namespace Matt_Movement
         {
             if (playerMovementState != MovementState.STUNNED)
             {
+                MovementState oldState = playerMovementState;
                 playerMovementState = MovementState.STUNNED;
+
+                // If the player was doing any special actions, this method stops the logic in that
                 StopMovement();
+                entityGraphics.SetBool("is_dashing", false);
+                entityGraphics.SetBool("is_dodging", false);
+                entityGraphics.SetBool("is_attacking", false);
+                StopCoroutine("PerformDodge");
+                StopCoroutine("PerformDash");
                 yield return new WaitForSeconds(stunTime);
-                playerMovementState = MovementState.NORMAL;
+
+                // If the player was in a special state prior to getting hit, they will go back to it
+                // Otherwise they will be at normal move state
+                if (oldState != MovementState.SUCCESSFUL_DODGE_NORMAL)
+                {
+                    playerMovementState = MovementState.NORMAL;
+                }
+                else
+                {
+                    playerMovementState = oldState;
+                }
             }
         }
 

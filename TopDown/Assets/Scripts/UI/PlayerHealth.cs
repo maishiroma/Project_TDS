@@ -97,7 +97,7 @@ namespace Matt_UI
         }
 
         // Returns the invincible state
-        public bool GetInvincible
+        public bool IsInvincible
         {
             get { return isInvincible; }
         }

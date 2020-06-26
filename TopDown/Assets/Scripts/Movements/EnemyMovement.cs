@@ -86,8 +86,14 @@ namespace Matt_Movement
         {
             if (collision.gameObject.tag == "Player")
             {
+                // If the game is in slow mo, they do not get affected by enemies
+                if (SlowMoEffect.Instance.IsInSlowMo)
+                {
+                    return;
+                }
+
                 // If the player is not invincible, they take damage
-                if (PlayerHealth.Instance.GetInvincible == false)
+                if (PlayerHealth.Instance.IsInvincible == false)
                 {
                     PlayerHealth.Instance.CurrentHealth -= 1;
                 }
