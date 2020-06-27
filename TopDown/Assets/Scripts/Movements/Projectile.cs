@@ -9,11 +9,21 @@ namespace Matt_Movement
     using Matt_Gimmicks;
     using Matt_UI;
     using Matt_System;
+    using System.Collections;
+    using UnityEngine.Experimental.Rendering.LWRP;
 
     public class Projectile : MonoBehaviour
     {
         // Private Static Vars
         private static ScoreSystem scoreSystem;
+
+        [Header("Visual Refs")]
+        public SpriteRenderer projectileRender;
+        public Animator projectileAnims;
+        public Light2D projectileLight;
+
+        [Header("Physics Refs")]
+        public BoxCollider2D projectileTrigger;
 
         [Header("General Vars")]
         [Tooltip("The travel speed of the projectile. Shpuld be a high value: i.e. 1000")]
@@ -22,7 +32,7 @@ namespace Matt_Movement
         [Tooltip("An array of all of the tags that this projectile can interact with")]
         public string[] interactableTags;
 
-        [HideInInspector]
+        // [HideInInspector]
         public string origShooterTag;       // The gameobject's tag that shot this
 
         // Private Vars
@@ -58,7 +68,7 @@ namespace Matt_Movement
 
             if (timeToDestroy >= 5f)
             {
-                DestroyItself();
+                Destroy(this.gameObject);
             }
         }
 
@@ -91,6 +101,7 @@ namespace Matt_Movement
                     {
                         case "Enemy":
                             // Kills Enemy
+                            projectileAnims.SetInteger("hit_type", 2);
                             scoreSystem.IncrementScore(3);
                             Destroy(collision.gameObject);
                             break;
@@ -111,27 +122,48 @@ namespace Matt_Movement
                                     PlayerHealth.Instance.CurrentHealth -= 1;
                                 }
                             }
+                            projectileAnims.SetInteger("hit_type", 2);
                             break;
                         case "Projectile":
                             // If we shoot an enemy projectime, we add points as well as help refill the slowmo meter
                             if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
                             {
+                                projectileAnims.SetInteger("hit_type", 2);
                                 scoreSystem.IncrementScore(1);
                                 SlowMoEffect.Instance.AddAdditionalTime(10f);
                             }
                             break;
                         case "Walls":
                             // All of these cases just cause the projectile to be destroyed (no special effects)
+                            projectileAnims.SetInteger("hit_type", 1);
                             break;
                     }
-                    DestroyItself();
+
+                    // If for some reason it skipped the case, the projectile will default change to 2
+                    if (projectileAnims.GetInteger("hit_type") == 0)
+                    {
+                        projectileAnims.SetInteger("hit_type", 2);
+                    }
+                    StartCoroutine(DestroyItself());
                 }
             }
         }
 
-        // Destroys the projectile
-        private void DestroyItself()
+        // Destroys the projectile while
+        private IEnumerator DestroyItself()
         {
+            // Gives time for the physics to kick in
+            projectileTrigger.enabled = false;
+            rb.constraints = RigidbodyConstraints2D.FreezePosition;
+            yield return new WaitForEndOfFrame();
+
+            // Plays out the animation for getting destroyed
+            projectileLight.enabled = false;
+            projectileRender.flipY = true;
+            gameObject.transform.localScale = new Vector3(5, 5, 0);
+
+            // Then removes the object after X seconds
+            yield return new WaitForSeconds(0.3f);
             Destroy(this.gameObject);
         }
 
