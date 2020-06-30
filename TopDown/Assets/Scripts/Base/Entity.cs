@@ -95,6 +95,16 @@ namespace Matt_Generics
         protected abstract void MoveEntity();
 
 
+        // Methods that all classes can utilize that are public
+        // Helper function that stops all player movement
+        // Can be overriden if needed
+        public virtual void StopMovement()
+        {
+            entityGraphics.SetBool("is_moving", false);
+            entityRb.velocity = Vector2.zero;
+            entityRb.angularVelocity = 0f;
+        }
+
     }
 
 }

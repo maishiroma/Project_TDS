@@ -103,7 +103,9 @@ namespace Matt_Movement
                             // Kills Enemy
                             projectileAnims.SetInteger("hit_type", 2);
                             scoreSystem.IncrementScore(3);
-                            Destroy(collision.gameObject);
+
+                            EnemyMovement currEnemy = collision.gameObject.GetComponent<EnemyMovement>();
+                            currEnemy.StartCoroutine(currEnemy.InvokeDefeated());
                             break;
                         case "Player":
                             // If the game is in slow mo, the bullet does not do anything
@@ -155,12 +157,12 @@ namespace Matt_Movement
             // Gives time for the physics to kick in
             projectileTrigger.enabled = false;
             rb.constraints = RigidbodyConstraints2D.FreezePosition;
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
 
             // Plays out the animation for getting destroyed
             projectileLight.enabled = false;
             projectileRender.flipY = true;
-            gameObject.transform.localScale = new Vector3(5, 5, 0);
+            projectileRender.transform.localScale = new Vector3(8, 8, 0);
 
             // Then removes the object after X seconds
             yield return new WaitForSeconds(0.3f);

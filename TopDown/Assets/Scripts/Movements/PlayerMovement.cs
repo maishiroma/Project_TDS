@@ -170,14 +170,6 @@ namespace Matt_Movement
             }
         }
 
-        // Helper function that stops all player movement
-        private void StopMovement()
-        {
-            entityGraphics.SetBool("is_moving", false);
-            entityRb.velocity = Vector2.zero;
-            entityRb.angularVelocity = 0f;
-        }
-
         // Reverts the player state from the state where they cannot do any more dodges
         private void RevertFromSuccessDodgeState()
         {

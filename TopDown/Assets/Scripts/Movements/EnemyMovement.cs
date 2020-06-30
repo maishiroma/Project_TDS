@@ -7,12 +7,17 @@
 namespace Matt_Movement
 {
     using UnityEngine;
+    using System.Collections;
     using Matt_Generics;
     using Matt_Gimmicks;
     using Matt_UI;
 
     public class EnemyMovement : Entity
     {
+        [Header("Outside Refs")]
+        public GameObject enemyRange;
+        public BoxCollider2D enemyCollision;
+
         [Header("Sub Variables")]
         [Range(0.1f, 1f)]
         [Tooltip("The amount of time it takes for this enemy to start shooting when it becomes aggresive")]
@@ -97,7 +102,7 @@ namespace Matt_Movement
                 {
                     PlayerHealth.Instance.CurrentHealth -= 1;
                 }
-                Destroy(this.gameObject);
+                StartCoroutine(InvokeDefeated());
             }
         }
 
@@ -126,6 +131,27 @@ namespace Matt_Movement
             {
                 entityGraphics.SetBool("is_moving", true);
             }
+        }
+
+        // Called when the enemy is considered defeated
+        public IEnumerator InvokeDefeated()
+        {
+            // We change its graphics to show its defeat as well as stop all movement and coroutines
+            entityGraphics.SetBool("is_defeated", true);
+            yield return new WaitForEndOfFrame();
+
+            StopCoroutine("ShootProjectile");
+            StopMovement();
+            entityRb.isKinematic = true;
+            enemyRange.SetActive(false);
+            enemyCollision.enabled = false;
+            isAggresive = false;
+
+            // We then scale the size of the sprite, (since the sprite was too small)
+            entityRenderer.transform.localScale = new Vector3(3f, 3f, 0);
+
+            yield return new WaitForSeconds(0.5f);
+            Destroy(this.gameObject);
         }
     }
 }

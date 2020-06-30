@@ -469,6 +469,8 @@ MonoBehaviour:
   entityProjectile: {fileID: 236307845066013766, guid: efbe2f084b1b9498eb5895f25c568432,
     type: 3}
   frontOfEntity: {fileID: 4475613463155862}
+  enemyRange: {fileID: 1989628468952448}
+  enemyCollision: {fileID: 61469736982074548}
   timeToStartShoot: 0.2
 --- !u!1 &1989628468952448
 GameObject:
