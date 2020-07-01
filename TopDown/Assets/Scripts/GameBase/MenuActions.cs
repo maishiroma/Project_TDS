@@ -13,6 +13,12 @@ namespace Matt_UI
 
     public class MenuActions : MonoBehaviour
     {
+        [Header("Music Objects")]
+        [Tooltip("The source of BGM music playing")]
+        public AudioSource bgm;
+        public AudioClip mainmenuMusic;
+        public AudioClip gameoverMusic;
+
         [Header("Menu Objects")]
         [Tooltip("Ref to the GameObject holding the Main Menu UI elements")]
         public GameObject MainMenu_Blob;
@@ -37,6 +43,7 @@ namespace Matt_UI
                 // By default, we display the main menu
                 ToggleUIBlobs("MainMenu");
             }
+            bgm.Play();
         }
 
         // Starts up the main game
@@ -61,9 +68,11 @@ namespace Matt_UI
             switch (ui_kind)
             {
                 case "MainMenu":
+                    bgm.clip = mainmenuMusic;
                     MainMenu_Blob.SetActive(true);
                     break;
                 case "GameOver":
+                    bgm.clip = gameoverMusic;
                     finalScore_text.text = "Total Score: " + GameManager.Instance.GetFinalScore.ToString();
                     GameOver_Blob.SetActive(true);
                     break;

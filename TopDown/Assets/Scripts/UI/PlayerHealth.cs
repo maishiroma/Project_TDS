@@ -16,6 +16,10 @@ namespace Matt_UI
         // Static variables
         public static PlayerHealth Instance;
 
+        [Header("SFX")]
+        public AudioSource sfx;
+        public AudioClip damaged;
+
         //Public Variables
         [Header("Player Refs")]
         [Tooltip("Ref to the player movement component")]
@@ -74,6 +78,9 @@ namespace Matt_UI
                     {
                         currHealth = 0;
                     }
+
+                    // Play the player taking damage 
+                    sfx.PlayOneShot(damaged);
 
                     // The player will be in hitstun for a little while
                     playerMovement.StartCoroutine(playerMovement.EnactHitStun());
