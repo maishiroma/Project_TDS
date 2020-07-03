@@ -13,6 +13,14 @@ namespace Matt_Gimmicks
         // Static Variables
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
+        [Header("Sound Refs")]
+        [SerializeField]
+        private AudioSource sfx;
+        [SerializeField]
+        private AudioClip slowMoStart;
+        [SerializeField]
+        private AudioClip slowmoEnd;
+
         // Private Vars that are exposed in editor only
         [Header("Gauge Refs")]
         [Tooltip("Ref to the UI gauge that acts as the timer")]
@@ -72,6 +80,7 @@ namespace Matt_Gimmicks
                 if (isInSlowMo == false && value == true)
                 {
                     // When slow motion is active, we enable various flags to showcase the slow motion
+                    sfx.PlayOneShot(slowMoStart);
                     gaugeBG.sprite = usingGauge;
 
                     currLightTime = 0f;
@@ -128,6 +137,7 @@ namespace Matt_Gimmicks
                 if (slowMoGauge.value <= 0)
                 {
                     // Once we reach the duration length, we turn off slow motion
+                    sfx.PlayOneShot(slowmoEnd);
                     isInSlowMo = false;
 
                     // As well as revert the lighting back

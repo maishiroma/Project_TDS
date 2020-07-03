@@ -16,6 +16,12 @@ namespace Matt_Movement
     {
         // Private Static Vars
         private static ScoreSystem scoreSystem;
+        private static AudioSource sfx;
+
+        [Header("Sounds Refs")]
+        public AudioClip hitProjectile;
+        public AudioClip hitWall;
+        public AudioClip hitTarget;
 
         [Header("Visual Refs")]
         public SpriteRenderer projectileRender;
@@ -45,11 +51,16 @@ namespace Matt_Movement
             rb = GetComponent<Rigidbody2D>();
         }
 
+        // Efficiently stores data on constantly referenced things that the class uses
         private void Start()
         {
             if (scoreSystem == null)
             {
                 scoreSystem = FindObjectOfType<ScoreSystem>();
+            }
+            if (sfx == null)
+            {
+                sfx = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
             }
         }
 
@@ -106,6 +117,7 @@ namespace Matt_Movement
 
                             EnemyMovement currEnemy = collision.gameObject.GetComponent<EnemyMovement>();
                             currEnemy.StartCoroutine(currEnemy.InvokeDefeated());
+                            sfx.PlayOneShot(hitTarget);
                             break;
                         case "Player":
                             // If the game is in slow mo, the bullet does not do anything
@@ -121,7 +133,12 @@ namespace Matt_Movement
                                 // If the player is not invincible or in slow mo, they take damage
                                 if (PlayerHealth.Instance.IsInvincible == false)
                                 {
+                                    sfx.PlayOneShot(hitTarget);
                                     PlayerHealth.Instance.CurrentHealth -= 1;
+                                }
+                                else
+                                {
+                                    sfx.PlayOneShot(hitWall);
                                 }
                             }
                             projectileAnims.SetInteger("hit_type", 2);
@@ -130,6 +147,7 @@ namespace Matt_Movement
                             // If we shoot an enemy projectime, we add points as well as help refill the slowmo meter
                             if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
                             {
+                                sfx.PlayOneShot(hitProjectile);
                                 projectileAnims.SetInteger("hit_type", 2);
                                 scoreSystem.IncrementScore(1);
                                 SlowMoEffect.Instance.AddAdditionalTime(10f);
@@ -137,6 +155,7 @@ namespace Matt_Movement
                             break;
                         case "Walls":
                             // All of these cases just cause the projectile to be destroyed (no special effects)
+                            sfx.PlayOneShot(hitWall);
                             projectileAnims.SetInteger("hit_type", 1);
                             break;
                     }
@@ -144,6 +163,7 @@ namespace Matt_Movement
                     // If for some reason it skipped the case, the projectile will default change to 2
                     if (projectileAnims.GetInteger("hit_type") == 0)
                     {
+                        sfx.PlayOneShot(hitWall);
                         projectileAnims.SetInteger("hit_type", 2);
                     }
                     StartCoroutine(DestroyItself());

@@ -35,6 +35,10 @@ namespace Matt_Movement
         [Tooltip("The trigger used to catch the player's dodge")]
         public DodgeTrigger playerDodge;
 
+        [Header("Sound Refs")]
+        public AudioSource sfx;
+        public AudioClip dash_sound;
+
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
         [Range(30f, 60f)]
@@ -209,6 +213,7 @@ namespace Matt_Movement
             MovementState oldState = playerMovementState;
 
             // The player dashes a timed amount of disitance
+            sfx.PlayOneShot(dash_sound);
             entityGraphics.SetBool("is_dashing", true);
             playerMovementState = MovementState.DASHING;
             entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);

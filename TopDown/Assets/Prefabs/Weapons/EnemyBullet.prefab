@@ -183,6 +183,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26aeb6fe041de4e45a9ffda029e0bc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitProjectile: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
+  hitWall: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
+  hitTarget: {fileID: 8300000, guid: 580654b6447a646b2b9227ce02f25700, type: 3}
   projectileRender: {fileID: 3785095368316689321}
   projectileAnims: {fileID: 3316557808867791886}
   projectileLight: {fileID: 1653573012}
@@ -204,6 +207,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Graphic
       objectReference: {fileID: 0}
+    - target: {fileID: 212695837013095866, guid: 5cf12e55416cd45a4be5e1d507765f5c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7abbf117ff2a141a1a4c77ed0d645c69,
+        type: 3}
     - target: {fileID: 4144019755070464, guid: 5cf12e55416cd45a4be5e1d507765f5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -260,12 +269,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 212695837013095866, guid: 5cf12e55416cd45a4be5e1d507765f5c,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 7abbf117ff2a141a1a4c77ed0d645c69,
-        type: 3}
     m_RemovedComponents:
     - {fileID: 50143460169122848, guid: 5cf12e55416cd45a4be5e1d507765f5c, type: 3}
     - {fileID: 61462612785935236, guid: 5cf12e55416cd45a4be5e1d507765f5c, type: 3}
