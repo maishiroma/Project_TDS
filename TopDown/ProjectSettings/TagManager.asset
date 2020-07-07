@@ -7,7 +7,9 @@ TagManager:
   - Enemy
   - Projectile
   - Walls
-  - SFX
+  - SFX_Player
+  - SFX_Enemy
+  - SFX_Env
   layers:
   - Default
   - TransparentFX

@@ -36,8 +36,12 @@ namespace Matt_Movement
         public DodgeTrigger playerDodge;
 
         [Header("Sound Refs")]
+        [Tooltip("Reference to the player's sound effect player")]
         public AudioSource sfx;
+        [Tooltip("The sound of the player dashing")]
         public AudioClip dash_sound;
+        [Tooltip("The sound of the player dodging at the start")]
+        public AudioClip dodge_start;
 
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
@@ -190,6 +194,7 @@ namespace Matt_Movement
         private IEnumerator PerformDodge()
         {
             // The player is in the state of dodge for a brief moment
+            sfx.PlayOneShot(dodge_start);
             playerMovementState = MovementState.DODGING;
             entityGraphics.SetBool("is_dodging", true);
             StopMovement();

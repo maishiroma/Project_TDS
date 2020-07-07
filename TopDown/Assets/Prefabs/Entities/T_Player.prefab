@@ -278,6 +278,7 @@ MonoBehaviour:
   playerDodge: {fileID: 6159954190429778324}
   sfx: {fileID: 0}
   dash_sound: {fileID: 8300000, guid: c54a4061aea974dc483a340f9b93d54b, type: 3}
+  dodge_start: {fileID: 8300000, guid: bd63b40ce6fa24dfea16ed607f02f41f, type: 3}
   dashSpeed: 50
   dashTime: 0.2
   dashCoolDown: 0.1

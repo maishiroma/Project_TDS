@@ -10,3 +10,4 @@ This document is to show what third party items that I used in this project. All
   - Minecraft Oof sound, [video source](https://www.youtube.com/watch?v=0T_NR2KY8uI)
   - Kirby Super Star (dashing, projectile hits, enemy defeats, slow mo end), [here](https://www.sounds-resource.com/snes/kss/sound/19371/)
   - Super Smash Brothers Brawl [slow down start](https://www.sounds-resource.com/wii/ssbb/sound/7487/)
+  - Kirby Air Ride [Meter Filled](https://www.sounds-resource.com/gamecube/kirbyairride/sound/3309/)

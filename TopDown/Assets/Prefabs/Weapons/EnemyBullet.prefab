@@ -186,6 +186,7 @@ MonoBehaviour:
   hitProjectile: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
   hitWall: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
   hitTarget: {fileID: 8300000, guid: 580654b6447a646b2b9227ce02f25700, type: 3}
+  fireStart: {fileID: 8300000, guid: a74b1ee53fd5748c799fbc6b7e701d63, type: 3}
   projectileRender: {fileID: 3785095368316689321}
   projectileAnims: {fileID: 3316557808867791886}
   projectileLight: {fileID: 1653573012}

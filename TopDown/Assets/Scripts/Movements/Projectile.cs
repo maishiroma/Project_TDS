@@ -16,19 +16,29 @@ namespace Matt_Movement
     {
         // Private Static Vars
         private static ScoreSystem scoreSystem;
-        private static AudioSource sfx;
+        private static AudioSource sfx_player;
+        private static AudioSource sfx_enemy;
 
         [Header("Sounds Refs")]
+        [Tooltip("Sound when this projectile hits another projectile")]
         public AudioClip hitProjectile;
+        [Tooltip("Sound when this projectile hits a solid surface")]
         public AudioClip hitWall;
+        [Tooltip("Sound when this projectile hits a damageable target")]
         public AudioClip hitTarget;
+        [Tooltip("Sound when this projectile is fired")]
+        public AudioClip fireStart;
 
         [Header("Visual Refs")]
+        [Tooltip("Ref to the render of the projectile")]
         public SpriteRenderer projectileRender;
+        [Tooltip("Ref to the animations of the projectile")]
         public Animator projectileAnims;
+        [Tooltip("Reference to the light surrounding the projectile")]
         public Light2D projectileLight;
 
         [Header("Physics Refs")]
+        [Tooltip("Ref to the hitbox of this projectile")]
         public BoxCollider2D projectileTrigger;
 
         [Header("General Vars")]
@@ -58,10 +68,25 @@ namespace Matt_Movement
             {
                 scoreSystem = FindObjectOfType<ScoreSystem>();
             }
-            if (sfx == null)
+
+            if (origShooterTag == "Player")
             {
-                sfx = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+                if (sfx_player == null)
+                {
+                    sfx_player = GameObject.FindGameObjectWithTag("SFX_Player").GetComponent<AudioSource>();
+                }
             }
+            else
+            {
+                if (sfx_enemy == null)
+                {
+                    sfx_enemy = GameObject.FindGameObjectWithTag("SFX_Env").GetComponent<AudioSource>();
+                }
+
+            }
+
+            // When the projectile is made, it fires a sound efect
+            PlaySoundAtSource("Start");
         }
 
         // Keeps track of how long it will take to remove this object
@@ -117,7 +142,7 @@ namespace Matt_Movement
 
                             EnemyMovement currEnemy = collision.gameObject.GetComponent<EnemyMovement>();
                             currEnemy.StartCoroutine(currEnemy.InvokeDefeated());
-                            sfx.PlayOneShot(hitTarget);
+                            PlaySoundAtSource("Enemy");
                             break;
                         case "Player":
                             // If the game is in slow mo, the bullet does not do anything
@@ -133,12 +158,12 @@ namespace Matt_Movement
                                 // If the player is not invincible or in slow mo, they take damage
                                 if (PlayerHealth.Instance.IsInvincible == false)
                                 {
-                                    sfx.PlayOneShot(hitTarget);
+                                    PlaySoundAtSource("Player");
                                     PlayerHealth.Instance.CurrentHealth -= 1;
                                 }
                                 else
                                 {
-                                    sfx.PlayOneShot(hitWall);
+                                    PlaySoundAtSource("Wall");
                                 }
                             }
                             projectileAnims.SetInteger("hit_type", 2);
@@ -147,7 +172,7 @@ namespace Matt_Movement
                             // If we shoot an enemy projectime, we add points as well as help refill the slowmo meter
                             if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
                             {
-                                sfx.PlayOneShot(hitProjectile);
+                                PlaySoundAtSource("Projectile");
                                 projectileAnims.SetInteger("hit_type", 2);
                                 scoreSystem.IncrementScore(1);
                                 SlowMoEffect.Instance.AddAdditionalTime(10f);
@@ -155,7 +180,7 @@ namespace Matt_Movement
                             break;
                         case "Walls":
                             // All of these cases just cause the projectile to be destroyed (no special effects)
-                            sfx.PlayOneShot(hitWall);
+                            PlaySoundAtSource("Walls");
                             projectileAnims.SetInteger("hit_type", 1);
                             break;
                     }
@@ -163,7 +188,7 @@ namespace Matt_Movement
                     // If for some reason it skipped the case, the projectile will default change to 2
                     if (projectileAnims.GetInteger("hit_type") == 0)
                     {
-                        sfx.PlayOneShot(hitWall);
+                        PlaySoundAtSource("Wall");
                         projectileAnims.SetInteger("hit_type", 2);
                     }
                     StartCoroutine(DestroyItself());
@@ -200,6 +225,47 @@ namespace Matt_Movement
                 }
             }
             return false;
+        }
+
+        // Helper method that properly plays our sound from the correct source
+        private void PlaySoundAtSource(string soundType)
+        {
+            if (origShooterTag == "Player")
+            {
+                switch (soundType)
+                {
+                    case "Start":
+                        sfx_player.PlayOneShot(fireStart);
+                        break;
+                    case "Enemy":
+                        sfx_player.PlayOneShot(hitTarget);
+                        break;
+                    case "Projectile":
+                        sfx_player.PlayOneShot(hitProjectile);
+                        break;
+                    case "Walls":
+                        sfx_player.PlayOneShot(hitWall);
+                        break;
+                }
+            }
+            else
+            {
+                switch (soundType)
+                {
+                    case "Start":
+                        sfx_enemy.PlayOneShot(fireStart);
+                        break;
+                    case "Player":
+                        sfx_enemy.PlayOneShot(hitTarget);
+                        break;
+                    case "Projectile":
+                        sfx_enemy.PlayOneShot(hitProjectile);
+                        break;
+                    case "Walls":
+                        sfx_enemy.PlayOneShot(hitWall);
+                        break;
+                }
+            }
         }
     }
 

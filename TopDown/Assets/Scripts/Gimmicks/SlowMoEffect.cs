@@ -15,11 +15,18 @@ namespace Matt_Gimmicks
 
         [Header("Sound Refs")]
         [SerializeField]
+        [Tooltip("Reference to the Background SFX that plays the game sounds")]
         private AudioSource sfx;
         [SerializeField]
+        [Tooltip("Plays when the player gets into slow motion")]
         private AudioClip slowMoStart;
         [SerializeField]
+        [Tooltip("Plays when slowm motion ends")]
         private AudioClip slowmoEnd;
+        [SerializeField]
+        [Tooltip("Plays when the player's slow motion meter is full")]
+        private AudioClip gaugeFull;
+
 
         // Private Vars that are exposed in editor only
         [Header("Gauge Refs")]
@@ -40,6 +47,7 @@ namespace Matt_Gimmicks
         [Header("Light Refs")]
         [Range(0.1f, 20f)]
         [SerializeField]
+        [Tooltip("How dim is the main game light when slow motion is happening?")]
         private float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
         [Tooltip("The light the main game used")]
         [SerializeField]
@@ -82,12 +90,9 @@ namespace Matt_Gimmicks
                     // When slow motion is active, we enable various flags to showcase the slow motion
                     sfx.PlayOneShot(slowMoStart);
                     gaugeBG.sprite = usingGauge;
-
                     currLightTime = 0f;
                     playerLighting.enabled = true;
-
                     isReady = false;
-
                     isInSlowMo = value;
                 }
             }
@@ -157,6 +162,7 @@ namespace Matt_Gimmicks
                     if (slowMoGauge.value >= slowMoGauge.maxValue)
                     {
                         // Once the gauge is filled and no slowdown is active, this is ready to be used
+                        sfx.PlayOneShot(gaugeFull);
                         isReady = true;
                         gaugeBG.sprite = fullGauge;
                     }

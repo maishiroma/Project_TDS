@@ -13,8 +13,10 @@ namespace Matt_Generics
     public abstract class Entity : MonoBehaviour
     {
         [Header("Graphical Variables")]
-        public Animator entityGraphics;        // The animatior that is on the gameObject controlling the sprite
-        public SpriteRenderer entityRenderer;     // The render that will be displaying the sprites
+        [Tooltip("Reference to the entity's animatior")]
+        public Animator entityGraphics;             // The animatior that is on the gameObject controlling the sprite
+        [Tooltip("Reference to the entity's sprite renderer")]
+        public SpriteRenderer entityRenderer;       // The render that will be displaying the sprites
 
         [Header("Movement Variables")]
         [Tooltip("The speed of the character")]

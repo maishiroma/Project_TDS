@@ -1,7 +1,5 @@
 ﻿/*  
  *  Dictates all menu controls when on a menu screen
- * 
- * 
  */
 
 namespace Matt_UI
@@ -16,7 +14,9 @@ namespace Matt_UI
         [Header("Music Objects")]
         [Tooltip("The source of BGM music playing")]
         public AudioSource bgm;
+        [Tooltip("Plays during the normal menus")]
         public AudioClip mainmenuMusic;
+        [Tooltip("Plays when the player gets a Game Over")]
         public AudioClip gameoverMusic;
 
         [Header("Menu Objects")]
@@ -43,6 +43,8 @@ namespace Matt_UI
                 // By default, we display the main menu
                 ToggleUIBlobs("MainMenu");
             }
+
+            // When we load up the screen, we have the music ready to play
             bgm.Play();
         }
 
@@ -59,6 +61,7 @@ namespace Matt_UI
         }
 
         // Toggles the named ui element to be the only one on
+        // We also specifify specific music to play depending on where we are
         public void ToggleUIBlobs(string ui_kind)
         {
             MainMenu_Blob.SetActive(false);
@@ -68,11 +71,17 @@ namespace Matt_UI
             switch (ui_kind)
             {
                 case "MainMenu":
-                    bgm.clip = mainmenuMusic;
+                    if (bgm.clip != mainmenuMusic)
+                    {
+                        bgm.clip = mainmenuMusic;
+                    }
                     MainMenu_Blob.SetActive(true);
                     break;
                 case "GameOver":
-                    bgm.clip = gameoverMusic;
+                    if (bgm.clip != gameoverMusic)
+                    {
+                        bgm.clip = gameoverMusic;
+                    }
                     finalScore_text.text = "Total Score: " + GameManager.Instance.GetFinalScore.ToString();
                     GameOver_Blob.SetActive(true);
                     break;

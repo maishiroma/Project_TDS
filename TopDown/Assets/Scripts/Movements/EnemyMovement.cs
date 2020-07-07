@@ -15,7 +15,9 @@ namespace Matt_Movement
     public class EnemyMovement : Entity
     {
         [Header("Outside Refs")]
+        [Tooltip("Reference to the enemy's gameobject coorelating to its range")]
         public GameObject enemyRange;
+        [Tooltip("Reference to the enemy's collision hitbox")]
         public BoxCollider2D enemyCollision;
 
         [Header("Sub Variables")]
@@ -26,27 +28,13 @@ namespace Matt_Movement
         // Private Vars
         private Rigidbody2D playerRb;       // Caches the player's Rigidbody for future calculations
         private bool isAggresive;           // Is the enemy in an aggresive state
-        private float currTime;
+        private float currTime;             // Helper method to keep track of how 
 
         // Getter/Setter
         public bool IsAggresive
         {
             get { return isAggresive; }
-
-            set
-            {
-                //// Depending on the enemy's fire rate, we slow down the enemy's attack animation to fit the need
-                //if (value == true)
-                //{
-                //    entityGraphics.speed /= attackRate;
-                //}
-                //else
-                //{
-                //    entityGraphics.speed = 1f;
-                //}
-
-                isAggresive = value;
-            }
+            set { isAggresive = value; }
         }
 
         // Grabs the player's rigidbody component and stores it
@@ -82,27 +70,6 @@ namespace Matt_Movement
                     StartCoroutine(ShootProjectile(playerRb.position));
                     currTime = 0f;
                 }
-            }
-        }
-
-        // If the enemy comes into contact with the player, they will be destroyed
-        // But the player will also take damage.
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            if (collision.gameObject.tag == "Player")
-            {
-                // If the game is in slow mo, they do not get affected by enemies
-                if (SlowMoEffect.Instance.IsInSlowMo)
-                {
-                    return;
-                }
-
-                // If the player is not invincible, they take damage
-                if (PlayerHealth.Instance.IsInvincible == false)
-                {
-                    PlayerHealth.Instance.CurrentHealth -= 1;
-                }
-                StartCoroutine(InvokeDefeated());
             }
         }
 
