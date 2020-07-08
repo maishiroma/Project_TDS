@@ -5,8 +5,8 @@
 namespace Matt_System
 {
     using UnityEngine;
-    using UnityEngine.SceneManagement;
     using Matt_Gimmicks;
+    using Matt_UI;
 
     public class GameManager : MonoBehaviour
     {
@@ -44,13 +44,16 @@ namespace Matt_System
 
         // Moves the game logic to the game over screen.
         // Also saves the result score to a private variable
-        public void GoToGameOver(int resultScore)
+        public void GoToGameOver(int resultScore, SceneTransitioner currSceneTransistor)
         {
-            finalScore = resultScore;
-            didGameOver = true;
-            SceneManager.LoadScene(0);
-        }
+            if (didGameOver == false)
+            {
+                didGameOver = true;
+                finalScore = resultScore;
 
+                StartCoroutine(currSceneTransistor.TransitionToScene(0));
+            }
+        }
     }
 
 }

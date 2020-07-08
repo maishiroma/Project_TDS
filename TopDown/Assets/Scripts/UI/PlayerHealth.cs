@@ -129,7 +129,8 @@ namespace Matt_UI
 
             if (currHealth <= 0)
             {
-                GameManager.Instance.GoToGameOver(playerScore.CurrentScore);
+                // When the player game overs, we move to the game over screen
+                GameManager.Instance.GoToGameOver(playerScore.CurrentScore, FindObjectOfType<SceneTransitioner>());
             }
         }
 

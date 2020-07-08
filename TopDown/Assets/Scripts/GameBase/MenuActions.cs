@@ -5,7 +5,6 @@
 namespace Matt_UI
 {
     using UnityEngine;
-    using UnityEngine.SceneManagement;
     using Matt_System;
     using TMPro;
 
@@ -26,6 +25,8 @@ namespace Matt_UI
         public GameObject GameOver_Blob;
         [Tooltip("Ref to the GameObject holding the Controls UI elements")]
         public GameObject Controls_Blob;
+        [Tooltip("Ref to the screen transitioner")]
+        public SceneTransitioner sceneTransitioner;
 
         [Header("Game Over Specifics")]
         [Tooltip("Ref to the text that displays the player's score")]
@@ -51,7 +52,7 @@ namespace Matt_UI
         // Starts up the main game
         public void NavigateToGame(int levelIndex)
         {
-            SceneManager.LoadScene(levelIndex);
+            StartCoroutine(sceneTransitioner.TransitionToScene(levelIndex));
         }
 
         // Quits the game
