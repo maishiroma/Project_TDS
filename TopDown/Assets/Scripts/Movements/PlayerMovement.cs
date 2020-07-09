@@ -10,6 +10,7 @@
 namespace Matt_Movement
 {
     using UnityEngine;
+    using Matt_System;
     using Matt_Generics;
     using Matt_Gimmicks;
     using Matt_UI;
@@ -29,19 +30,13 @@ namespace Matt_Movement
 
     public class PlayerMovement : Entity
     {
-
+        [Header("External Refs")]
         [Tooltip("The scene's camera")]
         public Camera mainCamera;
         [Tooltip("The trigger used to catch the player's dodge")]
         public DodgeTrigger playerDodge;
-
-        [Header("Sound Refs")]
-        [Tooltip("Reference to the player's sound effect player")]
-        public AudioSource sfx;
-        [Tooltip("The sound of the player dashing")]
-        public AudioClip dash_sound;
-        [Tooltip("The sound of the player dodging at the start")]
-        public AudioClip dodge_start;
+        [Tooltip("Reference to the player's health")]
+        public PlayerHealth playerHealth;
 
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
@@ -64,6 +59,14 @@ namespace Matt_Movement
         [Range(0.1f, 2f)]
         public float dodgeCoolDown = 0.2f;
 
+        [Header("Sound Refs")]
+        [Tooltip("Reference to the player's sound effect player")]
+        public AudioSource sfx;
+        [Tooltip("The sound of the player dashing")]
+        public AudioClip dash_sound;
+        [Tooltip("The sound of the player dodging at the start")]
+        public AudioClip dodge_start;
+
         // Private vars
         private MovementState playerMovementState = MovementState.NORMAL;       // Gets the player's movement state
         private Vector2 mousePos;                   // Stores the coords for the player's mouse
@@ -81,21 +84,30 @@ namespace Matt_Movement
         // Handles getting all player input
         private void Update()
         {
-            // If the player is stunned, they can't move
-            if (playerMovementState != MovementState.STUNNED)
+            if (playerHealth.CurrentHealth <= 0)
             {
-                // Get player Input for movement
-                moveInput.x = Input.GetAxisRaw("Horizontal");
-                moveInput.y = Input.GetAxisRaw("Vertical");
+                // When the player loses all health, we move to the game over screen
+                entityGraphics.SetBool("is_dead", true);
+                GameManager.Instance.GoToGameOver();
+            }
+            else
+            {
+                // If the player is stunned, they can't move
+                if (playerMovementState != MovementState.STUNNED)
+                {
+                    // Get player Input for movement
+                    moveInput.x = Input.GetAxisRaw("Horizontal");
+                    moveInput.y = Input.GetAxisRaw("Vertical");
 
-                // Get player input for direction
-                mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                    // Get player input for direction
+                    mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                // Get player input for firing
-                shootInput = Input.GetKey(KeyCode.Mouse0);
+                    // Get player input for firing
+                    shootInput = Input.GetKey(KeyCode.Mouse0);
 
-                // Gets player input for special movements
-                specialMovementInput = Input.GetKeyDown(KeyCode.Space);
+                    // Gets player input for special movements
+                    specialMovementInput = Input.GetKeyDown(KeyCode.Space);
+                }
             }
         }
 
@@ -118,7 +130,7 @@ namespace Matt_Movement
                     {
                         // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
                         // invincible
-                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && PlayerHealth.Instance.IsInvincible == false)
+                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && playerHealth.IsInvincible == false)
                         {
                             // The player performs a dodge
                             StartCoroutine("PerformDodge");

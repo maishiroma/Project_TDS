@@ -7,6 +7,8 @@ namespace Matt_System
     using UnityEngine;
     using Matt_Gimmicks;
     using Matt_UI;
+    using Matt_Movement;
+    using Matt_Generics;
 
     public class GameManager : MonoBehaviour
     {
@@ -14,8 +16,18 @@ namespace Matt_System
         public static GameManager Instance;
 
         // Private vars
+        // The following refs are cached for future refs
+        private ScoreSystem currentScoreSystem;         // Saves the object that has the score system
+        private SceneTransitioner sceneTransitioner;    // Saves the object that has the scene transitioner
+
         private bool didGameOver;           // Saves whether the game is in a game over state
         private int finalScore;             // Saves the final score amount the player has acheived.
+
+        // Allows others to reference the score system, but CANNOT replace it!
+        public ScoreSystem GetScoreSystem
+        {
+            get { return currentScoreSystem; }
+        }
 
         // Getter/Setters
         public bool DidGameOver
@@ -42,16 +54,48 @@ namespace Matt_System
             }
         }
 
+        // When this object is active for the first time, this calls in the OnLevelWasLoaded method
+        // to fill in all of the missing values
+        private void Start()
+        {
+            OnLevelWasLoaded(0);
+        }
+
+        // Because this is a singleton, we need to refresh the following private vars
+        // Each time we load in a level
+        private void OnLevelWasLoaded(int level)
+        {
+            currentScoreSystem = FindObjectOfType<ScoreSystem>();
+            sceneTransitioner = FindObjectOfType<SceneTransitioner>();
+
+            // If we are not in the main menu (aka index 0, we reset this back to false
+            if (level > 0)
+            {
+                didGameOver = false;
+            }
+        }
+
+        // This method stops all entities from moving
+        // Such as projectiles, enemies and players
+        private void StopEverything()
+        {
+            foreach (Entity currEntity in FindObjectsOfType<Entity>())
+            {
+                currEntity.StopMovement();
+            }
+        }
+
         // Moves the game logic to the game over screen.
         // Also saves the result score to a private variable
-        public void GoToGameOver(int resultScore, SceneTransitioner currSceneTransistor)
+        public void GoToGameOver()
         {
-            if (didGameOver == false)
+            if (didGameOver == false && currentScoreSystem != null && sceneTransitioner != null)
             {
                 didGameOver = true;
-                finalScore = resultScore;
+                finalScore = currentScoreSystem.CurrentScore;
 
-                StartCoroutine(currSceneTransistor.TransitionToScene(0));
+                StopEverything();
+                StartCoroutine(sceneTransitioner.TransitionToScene(0));
             }
         }
     }

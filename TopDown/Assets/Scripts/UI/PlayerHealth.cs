@@ -7,21 +7,14 @@ namespace Matt_UI
     using System.Collections;
     using UnityEngine;
     using UnityEngine.UI;
-    using Matt_System;
-    using Matt_Gimmicks;
     using Matt_Movement;
 
     public class PlayerHealth : MonoBehaviour
     {
-        // Static variables
-        public static PlayerHealth Instance;
-
-        //Public Variables
         [Header("Player Refs")]
         [Tooltip("Ref to the player movement component")]
-        public PlayerMovement playerMovement;
-        [Tooltip("Ref to the player score")]
-        public ScoreSystem playerScore;
+        [SerializeField]
+        private PlayerMovement playerMovement;
 
         // Private vars that are exposed in editor
         [Header("Positioning Vars")]
@@ -102,19 +95,6 @@ namespace Matt_UI
             get { return isInvincible; }
         }
 
-        // Makes it so that there's only one of these in the game
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(this.gameObject);
-            }
-        }
-
         // Sets the current health to be the max health
         private void Start()
         {
@@ -126,12 +106,6 @@ namespace Matt_UI
         private void Update()
         {
             UpdateHealthVisual();
-
-            if (currHealth <= 0)
-            {
-                // When the player game overs, we move to the game over screen
-                GameManager.Instance.GoToGameOver(playerScore.CurrentScore, FindObjectOfType<SceneTransitioner>());
-            }
         }
 
         // Moves the UI to where the player is
