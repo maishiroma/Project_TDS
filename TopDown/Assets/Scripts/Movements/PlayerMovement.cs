@@ -68,7 +68,7 @@ namespace Matt_Movement
         public AudioClip dodge_start;
 
         // Private vars
-        private MovementState playerMovementState = MovementState.NORMAL;       // Gets the player's movement state
+        private MovementState playerMovementState;  // Gets the player's movement state
         private Vector2 mousePos;                   // Stores the coords for the player's mouse
         private Vector2 moveInput;                  // Stores the input for the player movement
         private bool shootInput;                    // Checks if the player is firing
@@ -79,6 +79,11 @@ namespace Matt_Movement
         public MovementState GetPlayerMovementState
         {
             get { return playerMovementState; }
+        }
+
+        private void Start()
+        {
+            playerMovementState = MovementState.NORMAL;
         }
 
         // Handles getting all player input
@@ -120,19 +125,23 @@ namespace Matt_Movement
                 // Checks if the player can recover from a cooldown state after dodging
                 RevertFromSuccessDodgeState();
 
-                // Rotates player
-                OrientateEntity(mousePos);
-
                 // The player can do any movement option as long as they are not in cooldown
                 if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
                 {
-                    if (specialMovementInput == true)
+                    if (shootInput == true)
                     {
-                        // Dodging is pretty powerful, so this can only be done if they player is in a normal state and not
-                        // invincible
+                        // The player can shoot and move
+                        StartCoroutine(ShootProjectile(mousePos));
+                        MoveEntity();
+
+                        // Rotates player
+                        OrientateEntity(mousePos);
+                    }
+                    else if (specialMovementInput == true)
+                    {
                         if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && playerHealth.IsInvincible == false)
                         {
-                            // The player performs a dodge
+                            // Dodging can only be done if they player is in a normal state and not invincible
                             StartCoroutine("PerformDodge");
                         }
                         else
@@ -143,14 +152,11 @@ namespace Matt_Movement
                     }
                     else
                     {
-                        // Moves player
+                        // By default, the player moves
                         MoveEntity();
 
-                        // Player shoot input
-                        if (shootInput == true)
-                        {
-                            StartCoroutine(ShootProjectile(mousePos));
-                        }
+                        // Rotates player
+                        OrientateEntity(mousePos);
                     }
                 }
             }
@@ -159,17 +165,28 @@ namespace Matt_Movement
         // Handles a slight graphical issue with dashing as the player
         private void LateUpdate()
         {
-            if (playerMovementState == MovementState.DASHING)
+            if (playerMovementState == MovementState.DASHING || playerMovementState == MovementState.COOLDOWN)
             {
-                // If the player is dashing away from the mouse, they are "reversed" so it looks like
-                // They are running away properly
-                if (Mathf.Sign(prevDis - Vector2.Distance(entityRb.position, mousePos)) < 0)
+                // If the original disitance that the player had between themself and the mouse was a small enough gap
+                // The player will not "flip around"
+                // This is done so that the player isn't moonwalking while dashing by the mouse, which
+                // reorientates the player automatically.
+                // Note that the value is an estimate value I got from testing, if the player's dash speed increases,
+                // That value also may increase as well
+                if (Mathf.Abs(prevDis) <= 5f)
                 {
+                    entityRenderer.flipY = false;
+                }
+                else if (Mathf.Sign(prevDis - Vector2.Distance(entityRb.position, mousePos)) < 0)
+                {
+                    // Else, if the player is moving away from the mouse, we flip the sprite so that it looks like the
+                    // player is running away properly
                     entityRenderer.flipY = true;
                 }
             }
             else
             {
+                // Otherwise, we make sure that the player is orientated properly
                 entityRenderer.flipY = false;
             }
         }
@@ -177,7 +194,6 @@ namespace Matt_Movement
         // Moves the player based on their input
         protected override void MoveEntity()
         {
-            prevDis = Vector2.Distance(entityRb.position, mousePos);
             entityRb.MovePosition(entityRb.position + (moveInput * moveSpeed * Time.fixedDeltaTime));
 
             if (moveInput == Vector2.zero)
@@ -206,11 +222,11 @@ namespace Matt_Movement
         private IEnumerator PerformDodge()
         {
             // The player is in the state of dodge for a brief moment
-            sfx.PlayOneShot(dodge_start);
             playerMovementState = MovementState.DODGING;
             entityGraphics.SetBool("is_dodging", true);
             StopMovement();
             playerDodge.gameObject.SetActive(true);
+            sfx.PlayOneShot(dodge_start);
             yield return new WaitForSeconds(dodgeTime);
 
             // Then they are in a state where they cannot do any action
@@ -219,26 +235,29 @@ namespace Matt_Movement
             yield return new WaitForSeconds(dodgeCoolDown);
 
             // And then they return to normal
-            entityGraphics.SetBool("is_dodging", false);
             playerMovementState = MovementState.NORMAL;
+            entityGraphics.SetBool("is_dodging", false);
             yield return null;
         }
 
         // Perform the dash movement when called on
         private IEnumerator PerformDash(Vector2 movementDir)
         {
+            // We save a ref to the original disitance between the player and mouse where the player initiated the dash
+            // as well as the state of the player when they came into this couroutine
             MovementState oldState = playerMovementState;
+            prevDis = Vector2.Distance(entityRb.position, mousePos);
 
             // The player dashes a timed amount of disitance
-            sfx.PlayOneShot(dash_sound);
-            entityGraphics.SetBool("is_dashing", true);
             playerMovementState = MovementState.DASHING;
+            entityGraphics.SetBool("is_dashing", true);
             entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
+            sfx.PlayOneShot(dash_sound);
             yield return new WaitForSeconds(dashTime);
 
             // Then they go into a state where they cannot do anything
-            entityGraphics.SetBool("is_dashing", false);
             playerMovementState = MovementState.COOLDOWN;
+            entityGraphics.SetBool("is_dashing", false);
             StopMovement();
             yield return new WaitForSeconds(dashCoolDown);
 
@@ -255,11 +274,10 @@ namespace Matt_Movement
                 // Note: StopCoroutine only works if the coroutine used to create is uses a string argument
                 // This stops the delay that the player suffers from a dodge
                 // However, this also puts the player in a state where they cannot do any more additional dodges
+                playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
                 StopCoroutine("PerformDodge");
                 entityGraphics.SetBool("is_dodging", false);
                 playerDodge.gameObject.SetActive(false);
-
-                playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
             }
             yield return null;
         }

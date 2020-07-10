@@ -271,15 +271,15 @@ MonoBehaviour:
   entityGraphics: {fileID: 2110059715}
   entityRenderer: {fileID: 6204820334880679464}
   moveSpeed: 10
-  attackRate: 0.5
+  attackRate: 0.3
   entityProjectile: {fileID: 236307845066013766, guid: c256fb3359d254fe1a8f0d8212c4431e,
     type: 3}
   frontOfEntity: {fileID: 6123527931405629984}
   mainCamera: {fileID: 0}
   playerDodge: {fileID: 6159954190429778324}
   playerHealth: {fileID: 0}
-  dashSpeed: 50
-  dashTime: 0.2
+  dashSpeed: 60
+  dashTime: 0.4
   dashCoolDown: 0.1
   stunTime: 0.5
   dodgeTime: 0.3
