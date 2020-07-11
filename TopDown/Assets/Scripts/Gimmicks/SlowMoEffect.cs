@@ -1,4 +1,4 @@
-﻿/*  Global Script
+/*  Global Script
  *  This controls the slow motion that occues in the game
  */
 
@@ -14,61 +14,45 @@ namespace Matt_Gimmicks
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
         [Header("Sound Refs")]
-        [SerializeField]
         [Tooltip("Reference to the Background SFX that plays the game sounds")]
-        private AudioSource sfx;
-        [SerializeField]
+        public AudioSource sfx;
         [Tooltip("Plays when the player gets into slow motion")]
-        private AudioClip slowMoStart;
-        [SerializeField]
+        public AudioClip slowMoStart;
         [Tooltip("Plays when slowm motion ends")]
-        private AudioClip slowmoEnd;
-        [SerializeField]
+        public AudioClip slowmoEnd;
         [Tooltip("Plays when the player's slow motion meter is full")]
-        private AudioClip gaugeFull;
-
+        public AudioClip gaugeFull;
 
         // Private Vars that are exposed in editor only
         [Header("Gauge Refs")]
         [Tooltip("Ref to the UI gauge that acts as the timer")]
-        [SerializeField]
-        private Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
+        public Slider slowMoGauge;                      // Ref to the UI slider that showcases the time
         [Space]
         [Tooltip("Bellow items are associated with the BG of the gauge, showcasing its various states")]
-        [SerializeField]
-        private Image gaugeBG;                           // Ref to the BG of the gauge
-        [SerializeField]
-        private Sprite fullGauge;                        // What the gauge will look like when ready
-        [SerializeField]
-        private Sprite usingGauge;                       // What the gauge will look like during usages
-        [SerializeField]
-        private Sprite refillGauge;                      // What the gauge will look like when refilling
+        public Image gaugeBG;                           // Ref to the BG of the gauge
+        public Sprite fullGauge;                        // What the gauge will look like when ready
+        public Sprite usingGauge;                       // What the gauge will look like during usages
+        public Sprite refillGauge;                      // What the gauge will look like when refilling
 
         [Header("Light Refs")]
         [Range(0.1f, 20f)]
-        [SerializeField]
         [Tooltip("How dim is the main game light when slow motion is happening?")]
-        private float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
+        public float slowMoLightIntensity = 0.5f;       // How dim does the main light get when slow mo is active?
         [Tooltip("The light the main game used")]
-        [SerializeField]
-        private Light2D gameLighting;                    // Ref to the main lighting in the game
+        public Light2D gameLighting;                    // Ref to the main lighting in the game
         [Tooltip("The light that the player has")]
-        [SerializeField]
-        private Light2D playerLighting;                  // Ref to the light the player has
+        public Light2D playerLighting;                  // Ref to the light the player has
 
         [Header("Slow Motion Vars")]
-        [SerializeField]
         [Range(1f, 40f)]
         [Tooltip("How long are entities slowed down? Bigger Number = shorter timeframe")]
-        private float slowDownLength = 2f;              // How long does the slow motion last?
-        [SerializeField]
+        public float slowDownLength = 2f;              // How long does the slow motion last?
         [Range(0.01f, 0.99f)]
         [Tooltip("How potent is the slow down effect? Smaller number = higher effect")]
-        private float slowDownFactor = 0.05f;           // How strong is the slow motion effect
-        [SerializeField]
+        public float slowDownFactor = 0.05f;           // How strong is the slow motion effect
         [Range(1f, 40f)]
         [Tooltip("How long is the cooldown before using this again? Bigger Number = faster recovery")]
-        private float slowDownCoolDown = 2f;            // How long is the cooldown from using slowdown?
+        public float slowDownCoolDown = 2f;            // How long is the cooldown from using slowdown?
 
         // Private vars that are hidden
         private bool isReady = true;                    // Indicates if the slowdown ability is ready

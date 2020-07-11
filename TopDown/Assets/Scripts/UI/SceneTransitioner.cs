@@ -1,4 +1,4 @@
-﻿/*  Handles all of the screen transitions (between main menu and game overs)
+/*  Handles all of the screen transitions (between main menu and game overs)
  * 
  */
 

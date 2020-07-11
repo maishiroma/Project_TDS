@@ -1,4 +1,4 @@
-﻿/*  Spawns enemies in a given radius of an area
+/*  Spawns enemies in a given radius of an area
  * 
  */
 

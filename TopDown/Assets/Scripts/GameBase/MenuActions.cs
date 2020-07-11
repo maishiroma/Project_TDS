@@ -1,4 +1,4 @@
-﻿/*  
+/*  
  *  Dictates all menu controls when on a menu screen
  */
 

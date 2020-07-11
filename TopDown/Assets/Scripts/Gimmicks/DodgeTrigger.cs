@@ -1,4 +1,4 @@
-﻿/*  Dodge Mechanic
+/*  Dodge Mechanic
  *  This controls the dodge mechanic that the game will revolve around
  *  Essentially, if the entity does the dodge (which indicated by the hitbox shown) and an attack hits the dodge
  *  SlowMo will be activated

@@ -1,4 +1,4 @@
-﻿/*  Defines a basic scoring system for the player
+/*  Defines a basic scoring system for the player
  * 
  */
 

@@ -1,4 +1,4 @@
-﻿/*  Handles all of the Player's Health Tracking and whatnot
+/*  Handles all of the Player's Health Tracking and whatnot
  * 
  */
 
@@ -13,42 +13,33 @@ namespace Matt_UI
     {
         [Header("Player Refs")]
         [Tooltip("Ref to the player movement component")]
-        [SerializeField]
-        private PlayerMovement playerMovement;
+        public PlayerMovement playerMovement;
 
         // Private vars that are exposed in editor
         [Header("Positioning Vars")]
-        [SerializeField]
         [Tooltip("Ref to the player")]
-        private GameObject player;             // A ref to the player
-        [SerializeField]
+        public GameObject player;             // A ref to the player
         [Tooltip("Ref to the main camera")]
-        private Camera mainCamera;               // Reference to the main camera
-        [SerializeField]
+        public Camera mainCamera;               // Reference to the main camera
         [Tooltip("The offset that is applied to the UI when displayed")]
-        private Vector2 offset;                  // Offset to position the UI
+        public Vector2 offset;                  // Offset to position the UI
 
         [Header("UI Elements")]
-        [SerializeField]
         [Tooltip("The Image that refers to the health's border")]
-        private Image healthBorder;              // Ref to the border element of the health
-        [SerializeField]
+        public Image healthBorder;              // Ref to the border element of the health
         [Tooltip("The Image that refers to the health's fill")]
-        private Image healthFill;                // Ref to the fill element
+        public Image healthFill;                // Ref to the fill element
 
         [Header("Health Values")]
         [Range(1, 4)]
-        [SerializeField]
         [Tooltip("How much health does the player start out with?")]
-        private int maxHealth = 4;              // How much health the player has
+        public int maxHealth = 4;              // How much health the player has
         [Range(1f, 5f)]
-        [SerializeField]
         [Tooltip("How long does the player have after they take damage to be invulnerable?")]
-        private float invinciTime = 2f;         // How long is the invincibility of the player?
+        public float invinciTime = 2f;         // How long is the invincibility of the player?
         [Range(1f, 5f)]
-        [SerializeField]
         [Tooltip("How long does the health UI show when it does show?")]
-        private float showHealthTime = 2f;      // How long does the health show to the player?
+        public float showHealthTime = 2f;      // How long does the health show to the player?
 
         // Private vars that are NOT exposed
         private int currHealth;

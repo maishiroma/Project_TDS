@@ -1,4 +1,4 @@
-﻿/*  UI script that performs the UI display for the slo motion effect
+/*  UI script that performs the UI display for the slo motion effect
  *
  *  When the player is in slow mo, all enemies will have a clock effect on them. When slo motion is done, the clock will fade
  *  away

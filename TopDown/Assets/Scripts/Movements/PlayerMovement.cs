@@ -1,4 +1,4 @@
-﻿/*  Player Movement:
+/*  Player Movement:
  *  The goal in this case is to have the player be moved WASD, and have their rotation follow the mouse
  *  Fairly standard top down movement.
  *  

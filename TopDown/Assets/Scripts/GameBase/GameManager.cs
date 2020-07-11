@@ -1,4 +1,4 @@
-﻿/*  This is used to control game flow, as well as display certain information in different scenes
+/*  This is used to control game flow, as well as display certain information in different scenes
  * This is a static, persistent object, so any information that needs to persist between scenes can be saved in here
  */
 
@@ -9,6 +9,7 @@ namespace Matt_System
     using Matt_UI;
     using Matt_Movement;
     using Matt_Generics;
+    using UnityEngine.SceneManagement;
 
     public class GameManager : MonoBehaviour
     {
@@ -20,8 +21,8 @@ namespace Matt_System
         private ScoreSystem currentScoreSystem;         // Saves the object that has the score system
         private SceneTransitioner sceneTransitioner;    // Saves the object that has the scene transitioner
 
-        private bool didGameOver;           // Saves whether the game is in a game over state
-        private int finalScore;             // Saves the final score amount the player has acheived.
+        private bool didGameOver = false;               // Saves whether the game is in a game over state
+        private int finalScore = 0;                     // Saves the final score amount the player has acheived.
 
         // Allows others to reference the score system, but CANNOT replace it!
         public ScoreSystem GetScoreSystem
@@ -50,26 +51,28 @@ namespace Matt_System
             }
             else
             {
-                Destroy(this);
+                Destroy(this.gameObject);
             }
         }
 
-        // When this object is active for the first time, this calls in the OnLevelWasLoaded method
-        // to fill in all of the missing values
+        // Due to OnLevelLoaded being deprecated going to be adding a delgate to this method instead.
         private void Start()
         {
-            OnLevelWasLoaded(0);
+            currentScoreSystem = FindObjectOfType<ScoreSystem>();
+            sceneTransitioner = FindObjectOfType<SceneTransitioner>();
+
+            SceneManager.sceneLoaded += onLevelLoad;
         }
 
         // Because this is a singleton, we need to refresh the following private vars
         // Each time we load in a level
-        private void OnLevelWasLoaded(int level)
+        private void onLevelLoad(Scene scene, LoadSceneMode mode)
         {
             currentScoreSystem = FindObjectOfType<ScoreSystem>();
             sceneTransitioner = FindObjectOfType<SceneTransitioner>();
 
             // If we are not in the main menu (aka index 0, we reset this back to false
-            if (level > 0)
+            if (scene.buildIndex > 0)
             {
                 didGameOver = false;
             }

@@ -1,4 +1,4 @@
-﻿/*  Enemy Movement
+/*  Enemy Movement
  *  Most basic: Enemies will hone in on Player, and upon hitting the player, the player will take damage
  *  and the enemy will dissapear
  * 
@@ -78,7 +78,8 @@ namespace Matt_Movement
         protected override void MoveEntity()
         {
             // If the game is in slow motion, enemy movement will be slowed
-            Vector2 newPos;
+            Vector2 newPos = new Vector2();
+
             if (SlowMoEffect.Instance.IsInSlowMo)
             {
                 float newMoveSpeed = moveSpeed * SlowMoEffect.Instance.GetSlowDownFactor;
