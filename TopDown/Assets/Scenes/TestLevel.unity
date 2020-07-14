@@ -1527,9 +1527,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sfx: {fileID: 1921611144}
-  slowMoStart: {fileID: 8300000, guid: 1eee3e08448c54739804165e36446f84, type: 3}
-  slowmoEnd: {fileID: 8300000, guid: 0b1b87c32727740028f6ee3a371e3f39, type: 3}
-  gaugeFull: {fileID: 8300000, guid: c97b6842628354915a626842525f4977, type: 3}
+  slowMoStart:
+    soundClip: {fileID: 8300000, guid: 1eee3e08448c54739804165e36446f84, type: 3}
+    soundVolume: 0.3
+  slowmoEnd:
+    soundClip: {fileID: 8300000, guid: 0b1b87c32727740028f6ee3a371e3f39, type: 3}
+    soundVolume: 0.2
+  gaugeFull:
+    soundClip: {fileID: 8300000, guid: c97b6842628354915a626842525f4977, type: 3}
+    soundVolume: 0.2
   slowMoGauge: {fileID: 1998938545}
   gaugeBG: {fileID: 441287619}
   fullGauge: {fileID: 21300000, guid: 84d84c22d980146c492e8d0a7db49d78, type: 3}
@@ -1548,7 +1554,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686723062}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b1343bac3a8f408e9431de4b931eec8, type: 3}
   m_Name: 
@@ -1767,7 +1773,7 @@ Transform:
   - {fileID: 943405254}
   - {fileID: 523406047}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &904806885
 GameObject:
@@ -2856,7 +2862,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: cee5ced5fe8054552903800e8887a334, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -3015,7 +3021,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3478,7 +3484,7 @@ PrefabInstance:
     - target: {fileID: 6123752298459846714, guid: 204f77855d27646a0914fcacdd1357c6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6123752298459846714, guid: 204f77855d27646a0914fcacdd1357c6,
         type: 3}

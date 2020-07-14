@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 6588399537983592887}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.5}
+  m_LocalScale: {x: 2, y: 2, z: 0.5}
   m_Children:
   - {fileID: 3925521925347072531}
   - {fileID: 1653573011}
@@ -170,7 +170,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3, y: 3}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &236307845066013766
 MonoBehaviour:
@@ -184,20 +184,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26aeb6fe041de4e45a9ffda029e0bc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxSource: {fileID: 7972343595654646791}
-  hitProjectile: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
-  hitWall: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
-  hitTarget: {fileID: 8300000, guid: 580654b6447a646b2b9227ce02f25700, type: 3}
-  fireStart: {fileID: 8300000, guid: a74b1ee53fd5748c799fbc6b7e701d63, type: 3}
-  projectileRender: {fileID: 3785095368316689321}
-  projectileAnims: {fileID: 3316557808867791886}
-  projectileLight: {fileID: 1653573012}
-  projectileTrigger: {fileID: 3593410142099903703}
   moveSpeed: 1000
   interactableTags:
   - Player
   - Projectile
   - Walls
+  projectileTrigger: {fileID: 3593410142099903703}
+  projectileRender: {fileID: 3785095368316689321}
+  projectileAnims: {fileID: 3316557808867791886}
+  projectileLight: {fileID: 1653573012}
+  sfxSource: {fileID: 7972343595654646791}
+  hitProjectile:
+    soundClip: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
+    soundVolume: 0.1
+  hitWall:
+    soundClip: {fileID: 8300000, guid: 6c1d7e4510e024fd79bc4a8cd92fbc89, type: 3}
+    soundVolume: 0.1
+  hitTarget:
+    soundClip: {fileID: 8300000, guid: 580654b6447a646b2b9227ce02f25700, type: 3}
+    soundVolume: 1
+  fireStart:
+    soundClip: {fileID: 8300000, guid: a74b1ee53fd5748c799fbc6b7e701d63, type: 3}
+    soundVolume: 0.1
   origShooterTag: 
 --- !u!82 &7972343595654646791
 AudioSource:

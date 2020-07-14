@@ -278,6 +278,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   playerDodge: {fileID: 6159954190429778324}
   playerHealth: {fileID: 0}
+  playerHitBox: {fileID: 6067459602117766030}
   dashSpeed: 60
   dashTime: 0.4
   dashCoolDown: 0.1
@@ -285,8 +286,12 @@ MonoBehaviour:
   dodgeTime: 0.3
   dodgeCoolDown: 0.5
   sfx: {fileID: 9021114286216155679}
-  dash_sound: {fileID: 8300000, guid: c54a4061aea974dc483a340f9b93d54b, type: 3}
-  dodge_start: {fileID: 8300000, guid: bd63b40ce6fa24dfea16ed607f02f41f, type: 3}
+  dashSound:
+    soundClip: {fileID: 8300000, guid: c54a4061aea974dc483a340f9b93d54b, type: 3}
+    soundVolume: 0.5
+  dodgeStart:
+    soundClip: {fileID: 8300000, guid: bd63b40ce6fa24dfea16ed607f02f41f, type: 3}
+    soundVolume: 0.2
 --- !u!1 &6120084586900024132
 GameObject:
   m_ObjectHideFlags: 0

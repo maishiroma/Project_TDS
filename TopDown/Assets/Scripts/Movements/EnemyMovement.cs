@@ -116,7 +116,6 @@ namespace Matt_Movement
             isAggresive = false;
 
             // We then scale the size of the sprite, (since the sprite was too small)
-            entityRenderer.transform.localScale = new Vector3(3f, 3f, 0);
 
             yield return new WaitForSeconds(0.5f);
             Destroy(this.gameObject);

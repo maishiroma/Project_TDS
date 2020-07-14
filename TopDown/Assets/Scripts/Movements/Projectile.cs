@@ -5,11 +5,12 @@
 
 namespace Matt_Movement
 {
-    using UnityEngine;
-    using Matt_Gimmicks;
     using System.Collections;
+    using UnityEngine;
     using UnityEngine.Experimental.Rendering.LWRP;
+    using Matt_Gimmicks;
     using Matt_System;
+    using Matt_Generics;
 
     public class Projectile : MonoBehaviour
     {
@@ -36,13 +37,13 @@ namespace Matt_Movement
         [Tooltip("Ref to the audio source, where all projectile sounds come from")]
         public AudioSource sfxSource;
         [Tooltip("Sound when this projectile hits another projectile")]
-        public AudioClip hitProjectile;
+        public SfxWrapper hitProjectile;
         [Tooltip("Sound when this projectile hits a solid surface")]
-        public AudioClip hitWall;
+        public SfxWrapper hitWall;
         [Tooltip("Sound when this projectile hits a damageable target")]
-        public AudioClip hitTarget;
+        public SfxWrapper hitTarget;
         [Tooltip("Sound when this projectile is fired")]
-        public AudioClip fireStart;
+        public SfxWrapper fireStart;
 
         // [HideInInspector]
         public string origShooterTag;       // The gameobject's tag that shot this
@@ -182,7 +183,6 @@ namespace Matt_Movement
             // Plays out the animation for getting destroyed
             projectileLight.enabled = false;
             projectileRender.flipY = true;
-            projectileRender.transform.localScale = new Vector3(8, 8, 0);
 
             // Then removes the object after X seconds
             yield return new WaitForSeconds(0.3f);
@@ -208,17 +208,17 @@ namespace Matt_Movement
             switch (soundType)
             {
                 case "Start":
-                    sfxSource.PlayOneShot(fireStart);
+                    fireStart.PlaySoundClip(sfxSource);
                     break;
                 case "Player":
                 case "Enemy":
-                    sfxSource.PlayOneShot(hitTarget);
+                    hitTarget.PlaySoundClip(sfxSource);
                     break;
                 case "Projectile":
-                    sfxSource.PlayOneShot(hitProjectile);
+                    hitProjectile.PlaySoundClip(sfxSource);
                     break;
                 case "Walls":
-                    sfxSource.PlayOneShot(hitWall);
+                    hitWall.PlaySoundClip(sfxSource);
                     break;
             }
         }

@@ -7,6 +7,7 @@ namespace Matt_Gimmicks
     using UnityEngine;
     using UnityEngine.UI;
     using UnityEngine.Experimental.Rendering.LWRP;
+    using Matt_Generics;
 
     public class SlowMoEffect : MonoBehaviour
     {
@@ -17,11 +18,11 @@ namespace Matt_Gimmicks
         [Tooltip("Reference to the Background SFX that plays the game sounds")]
         public AudioSource sfx;
         [Tooltip("Plays when the player gets into slow motion")]
-        public AudioClip slowMoStart;
+        public SfxWrapper slowMoStart;
         [Tooltip("Plays when slowm motion ends")]
-        public AudioClip slowmoEnd;
+        public SfxWrapper slowmoEnd;
         [Tooltip("Plays when the player's slow motion meter is full")]
-        public AudioClip gaugeFull;
+        public SfxWrapper gaugeFull;
 
         // Private Vars that are exposed in editor only
         [Header("Gauge Refs")]
@@ -72,7 +73,7 @@ namespace Matt_Gimmicks
                 if (isInSlowMo == false && value == true)
                 {
                     // When slow motion is active, we enable various flags to showcase the slow motion
-                    sfx.PlayOneShot(slowMoStart);
+                    slowMoStart.PlaySoundClip(sfx);
                     gaugeBG.sprite = usingGauge;
                     currLightTime = 0f;
                     playerLighting.enabled = true;
@@ -126,7 +127,7 @@ namespace Matt_Gimmicks
                 if (slowMoGauge.value <= 0)
                 {
                     // Once we reach the duration length, we turn off slow motion
-                    sfx.PlayOneShot(slowmoEnd);
+                    slowmoEnd.PlaySoundClip(sfx);
                     isInSlowMo = false;
 
                     // As well as revert the lighting back
@@ -146,7 +147,7 @@ namespace Matt_Gimmicks
                     if (slowMoGauge.value >= slowMoGauge.maxValue)
                     {
                         // Once the gauge is filled and no slowdown is active, this is ready to be used
-                        sfx.PlayOneShot(gaugeFull);
+                        gaugeFull.PlaySoundClip(sfx);
                         isReady = true;
                         gaugeBG.sprite = fullGauge;
                     }

@@ -37,6 +37,8 @@ namespace Matt_Movement
         public DodgeTrigger playerDodge;
         [Tooltip("Reference to the player's health")]
         public PlayerHealth playerHealth;
+        [Tooltip("The player's hit collision")]
+        public BoxCollider2D playerHitBox;
 
         [Header("Player Specific Movements")]
         [Tooltip("How fast does the player move when dashing")]
@@ -63,9 +65,9 @@ namespace Matt_Movement
         [Tooltip("Reference to the player's sound effect player")]
         public AudioSource sfx;
         [Tooltip("The sound of the player dashing")]
-        public AudioClip dash_sound;
+        public SfxWrapper dashSound;
         [Tooltip("The sound of the player dodging at the start")]
-        public AudioClip dodge_start;
+        public SfxWrapper dodgeStart;
 
         // Private vars
         private MovementState playerMovementState;  // Gets the player's movement state
@@ -92,6 +94,7 @@ namespace Matt_Movement
             if (playerHealth.CurrentHealth <= 0)
             {
                 // When the player loses all health, we move to the game over screen
+                playerHitBox.enabled = false;
                 entityGraphics.SetBool("is_dead", true);
                 GameManager.Instance.GoToGameOver();
             }
@@ -226,7 +229,7 @@ namespace Matt_Movement
             entityGraphics.SetBool("is_dodging", true);
             StopMovement();
             playerDodge.gameObject.SetActive(true);
-            sfx.PlayOneShot(dodge_start);
+            dodgeStart.PlaySoundClip(sfx);
             yield return new WaitForSeconds(dodgeTime);
 
             // Then they are in a state where they cannot do any action
@@ -252,7 +255,7 @@ namespace Matt_Movement
             playerMovementState = MovementState.DASHING;
             entityGraphics.SetBool("is_dashing", true);
             entityRb.AddForce(movementDir * dashSpeed, ForceMode2D.Impulse);
-            sfx.PlayOneShot(dash_sound);
+            dashSound.PlaySoundClip(sfx);
             yield return new WaitForSeconds(dashTime);
 
             // Then they go into a state where they cannot do anything

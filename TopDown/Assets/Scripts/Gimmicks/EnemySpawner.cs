@@ -100,11 +100,12 @@ namespace Matt_Gimmicks
                 numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
             }
 
-            GameObject enemyCloud = Instantiate(enemySpawn_Cloud, spawnPos, Quaternion.identity, null);
+            // If the size of the cloud is off, check the animation on the cloud
+            GameObject enemyCloud = Instantiate(enemySpawn_Cloud, spawnPos, Quaternion.identity);
             yield return new WaitForSeconds(1f);
 
             Destroy(enemyCloud);
-            GameObject newEnemy = Instantiate(enemySpawn, spawnPos, Quaternion.identity, null);
+            GameObject newEnemy = Instantiate(enemySpawn, spawnPos, Quaternion.identity);
 
             spawnedObjs.Add(newEnemy);
             yield return null;
