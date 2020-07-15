@@ -20,8 +20,12 @@ namespace Matt_Gimmicks
         [Header("General Vars")]
         [Tooltip("How many enemys can be spawned at a given time?")]
         public int maxEnemySpawn;
-        [Tooltip("How fast does this spawner spawn enemies")]
+        [Tooltip("How fast does this spawner spawn enemies?")]
+        [Range(0.1f, 10f)]
         public float spawnRate;
+        [Tooltip("How fast does enemy cloud spawns last (must be smaller than spawn rate)?")]
+        [Range(0.1f, 10f)]
+        public float cloudDuration;
         [Tooltip("The layermask that holds all of the level terrain")]
         public LayerMask terrainLevel;
 
@@ -46,6 +50,16 @@ namespace Matt_Gimmicks
             Random.InitState(Random.Range(1, 255));
         }
 
+        // Makes sure that the spawn rate and the enemyCloudDuration are not clashing
+        private void OnValidate()
+        {
+            if (spawnRate <= cloudDuration)
+            {
+                Debug.LogError("Spawn Rate must be higher than enemyCloudDuration!");
+            }
+        }
+
+        // Handles spawn logic
         private void Update()
         {
             // If the game is in slow mo, no enemies will be spawned
@@ -66,7 +80,7 @@ namespace Matt_Gimmicks
                 amountofTime += Time.deltaTime;
                 if (amountofTime >= spawnRate)
                 {
-                    amountofTime = 0;
+                    amountofTime = 0f;
                     CheckIfSpawnable();
                 }
             }
@@ -102,11 +116,10 @@ namespace Matt_Gimmicks
 
             // If the size of the cloud is off, check the animation on the cloud
             GameObject enemyCloud = Instantiate(enemySpawn_Cloud, spawnPos, Quaternion.identity);
-            yield return new WaitForSeconds(1f);
-
+            yield return new WaitForSeconds(cloudDuration);
             Destroy(enemyCloud);
-            GameObject newEnemy = Instantiate(enemySpawn, spawnPos, Quaternion.identity);
 
+            GameObject newEnemy = Instantiate(enemySpawn, spawnPos, Quaternion.identity);
             spawnedObjs.Add(newEnemy);
             yield return null;
         }

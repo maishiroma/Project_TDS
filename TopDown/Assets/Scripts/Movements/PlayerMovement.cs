@@ -142,12 +142,12 @@ namespace Matt_Movement
                     }
                     else if (specialMovementInput == true)
                     {
-                        if (moveInput.x == 0f && moveInput.y == 0f && playerMovementState == MovementState.NORMAL && playerHealth.IsInvincible == false)
+                        if (moveInput.x == 0f && moveInput.y == 0f && playerHealth.IsInvincible == false)
                         {
-                            // Dodging can only be done if they player is in a normal state and not invincible
+                            // Dodging can be done if the player is not invincible
                             StartCoroutine("PerformDodge");
                         }
-                        else
+                        else if (moveInput.x != 0f || moveInput.y != 0f)
                         {
                             // The player performs a dash
                             StartCoroutine(PerformDash(moveInput));
@@ -168,7 +168,7 @@ namespace Matt_Movement
         // Handles a slight graphical issue with dashing as the player
         private void LateUpdate()
         {
-            if (playerMovementState == MovementState.DASHING || playerMovementState == MovementState.COOLDOWN)
+            if (playerMovementState == MovementState.DASHING)
             {
                 // If the original disitance that the player had between themself and the mouse was a small enough gap
                 // The player will not "flip around"

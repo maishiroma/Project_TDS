@@ -45,13 +45,13 @@ namespace Matt_Gimmicks
         public Light2D playerLighting;                  // Ref to the light the player has
 
         [Header("Slow Motion Vars")]
-        [Range(1f, 40f)]
+        [Range(1f, 100f)]
         [Tooltip("How long are entities slowed down? Bigger Number = shorter timeframe")]
         public float slowDownLength = 2f;              // How long does the slow motion last?
         [Range(0.01f, 0.99f)]
         [Tooltip("How potent is the slow down effect? Smaller number = higher effect")]
         public float slowDownFactor = 0.05f;           // How strong is the slow motion effect
-        [Range(1f, 40f)]
+        [Range(1f, 100f)]
         [Tooltip("How long is the cooldown before using this again? Bigger Number = faster recovery")]
         public float slowDownCoolDown = 2f;            // How long is the cooldown from using slowdown?
 
