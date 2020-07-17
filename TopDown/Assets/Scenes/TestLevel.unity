@@ -1563,8 +1563,8 @@ MonoBehaviour:
   enemySpawn_Cloud: {fileID: 1971092924550660, guid: 4c06b15cb08164ae1aa5066eec2cfba5,
     type: 3}
   maxEnemySpawn: 10
-  spawnRate: 0.6
-  cloudDuration: 0.5
+  spawnRate: 3
+  cloudDuration: 1
   terrainLevel:
     serializedVersion: 2
     m_Bits: 256

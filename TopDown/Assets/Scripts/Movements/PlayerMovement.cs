@@ -23,9 +23,9 @@ namespace Matt_Movement
         NORMAL,                     // Standard state
         DODGING,                    // State in which the player is considered dodging an attack
         DASHING,                    // State in which the player is moving fast for a brief moment
-        COOLDOWN,                   // State where the player cannot move or perform any movement actions
-        SUCCESSFUL_DODGE_NORMAL,    // State where it is identical to NORMAL, but the player cannot perform dodges
-        STUNNED                     // State where the player cannot move, due to hitstun from an enemy
+        COOLDOWN,                   // State where the player can't perform special moves, but can still move and shoot
+        NORMAL_NO_DODGE,            // State where the player can do all action, but dodge
+        STUNNED                     // State where the player cannot move
     }
 
     public class PlayerMovement : Entity
@@ -114,7 +114,7 @@ namespace Matt_Movement
                     shootInput = Input.GetKey(KeyCode.Mouse0);
 
                     // Gets player input for special movements
-                    specialMovementInput = Input.GetKeyDown(KeyCode.Space);
+                    specialMovementInput = Input.GetKey(KeyCode.Space);
                 }
             }
         }
@@ -128,23 +128,14 @@ namespace Matt_Movement
                 // Checks if the player can recover from a cooldown state after dodging
                 RevertFromSuccessDodgeState();
 
-                // The player can do any movement option as long as they are not in cooldown
-                if (playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+                // If the player in a relatively normal state, they can perform special actions alongside basic movement
+                if(playerMovementState == MovementState.NORMAL || playerMovementState == MovementState.NORMAL_NO_DODGE)
                 {
-                    if (shootInput == true)
+                    if (specialMovementInput == true)
                     {
-                        // The player can shoot and move
-                        StartCoroutine(ShootProjectile(mousePos));
-                        MoveEntity();
-
-                        // Rotates player
-                        OrientateEntity(mousePos);
-                    }
-                    else if (specialMovementInput == true)
-                    {
-                        if (moveInput.x == 0f && moveInput.y == 0f && playerHealth.IsInvincible == false)
+                        if (moveInput.x == 0f && moveInput.y == 0f && playerHealth.IsInvincible == false && playerMovementState == MovementState.NORMAL)
                         {
-                            // Dodging can be done if the player is not invincible
+                            // Dodging can be done if the player is not invincible and in a specific state
                             StartCoroutine("PerformDodge");
                         }
                         else if (moveInput.x != 0f || moveInput.y != 0f)
@@ -155,12 +146,33 @@ namespace Matt_Movement
                     }
                     else
                     {
-                        // By default, the player moves
+                        if (shootInput == true)
+                        {
+                            // The player can shoot
+                            StartCoroutine(ShootProjectile(mousePos));
+                        }
+
+                        // Move player
                         MoveEntity();
 
                         // Rotates player
                         OrientateEntity(mousePos);
                     }
+                }
+                else if (playerMovementState == MovementState.COOLDOWN)
+                {
+                    // If the player is in limited movemment, they can only do the basics
+                    if (shootInput == true)
+                    {
+                        // The player can shoot
+                        StartCoroutine(ShootProjectile(mousePos));
+                    }
+
+                    // Move player
+                    MoveEntity();
+
+                    // Rotates player
+                    OrientateEntity(mousePos);
                 }
             }
         }
@@ -212,7 +224,7 @@ namespace Matt_Movement
         // Reverts the player state from the state where they cannot do any more dodges
         private void RevertFromSuccessDodgeState()
         {
-            if (playerMovementState == MovementState.SUCCESSFUL_DODGE_NORMAL)
+            if (playerMovementState == MovementState.NORMAL_NO_DODGE)
             {
                 if (SlowMoEffect.Instance.isReadyToBeUsed == true)
                 {
@@ -233,7 +245,7 @@ namespace Matt_Movement
             yield return new WaitForSeconds(dodgeTime);
 
             // Then they are in a state where they cannot do any action
-            playerMovementState = MovementState.COOLDOWN;
+            playerMovementState = MovementState.STUNNED;
             playerDodge.gameObject.SetActive(false);
             yield return new WaitForSeconds(dodgeCoolDown);
 
@@ -258,7 +270,7 @@ namespace Matt_Movement
             dashSound.PlaySoundClip(sfx);
             yield return new WaitForSeconds(dashTime);
 
-            // Then they go into a state where they cannot do anything
+            // Then they go into a state where they can't do another dash, but can still do normal actions
             playerMovementState = MovementState.COOLDOWN;
             entityGraphics.SetBool("is_dashing", false);
             StopMovement();
@@ -277,7 +289,7 @@ namespace Matt_Movement
                 // Note: StopCoroutine only works if the coroutine used to create is uses a string argument
                 // This stops the delay that the player suffers from a dodge
                 // However, this also puts the player in a state where they cannot do any more additional dodges
-                playerMovementState = MovementState.SUCCESSFUL_DODGE_NORMAL;
+                playerMovementState = MovementState.NORMAL_NO_DODGE;
                 StopCoroutine("PerformDodge");
                 entityGraphics.SetBool("is_dodging", false);
                 playerDodge.gameObject.SetActive(false);
@@ -289,33 +301,29 @@ namespace Matt_Movement
         // This is called when the player takes damage
         public IEnumerator EnactHitStun()
         {
-            if (playerMovementState != MovementState.STUNNED)
+            MovementState oldState = playerMovementState;
+            playerMovementState = MovementState.STUNNED;
+
+            // If the player was doing any special actions, this method stops the logic in that
+            StopMovement();
+            entityGraphics.SetBool("is_dashing", false);
+            entityGraphics.SetBool("is_dodging", false);
+            entityGraphics.SetBool("is_attacking", false);
+            StopCoroutine("PerformDodge");
+            StopCoroutine("PerformDash");
+            yield return new WaitForSeconds(stunTime);
+
+            // If the player was in a special state prior to getting hit, they will go back to it
+            // Otherwise they will be at normal move state
+            if (oldState != MovementState.NORMAL_NO_DODGE)
             {
-                MovementState oldState = playerMovementState;
-                playerMovementState = MovementState.STUNNED;
-
-                // If the player was doing any special actions, this method stops the logic in that
-                StopMovement();
-                entityGraphics.SetBool("is_dashing", false);
-                entityGraphics.SetBool("is_dodging", false);
-                entityGraphics.SetBool("is_attacking", false);
-                StopCoroutine("PerformDodge");
-                StopCoroutine("PerformDash");
-                yield return new WaitForSeconds(stunTime);
-
-                // If the player was in a special state prior to getting hit, they will go back to it
-                // Otherwise they will be at normal move state
-                if (oldState != MovementState.SUCCESSFUL_DODGE_NORMAL)
-                {
-                    playerMovementState = MovementState.NORMAL;
-                }
-                else
-                {
-                    playerMovementState = oldState;
-                }
+                playerMovementState = MovementState.NORMAL;
+            }
+            else
+            {
+                playerMovementState = oldState;
             }
         }
-
     }
 }
 
