@@ -17,6 +17,13 @@ namespace Matt_UI
         public AudioClip mainmenuMusic;
         [Tooltip("Plays when the player gets a Game Over")]
         public AudioClip gameoverMusic;
+        [Space]
+        [Tooltip("The source of sfx playing")]
+        public AudioSource sfx;
+        [Tooltip("Plays when the player selects a button")]
+        public AudioClip selectButton_sfx;
+        [Tooltip("Plays when the player starts the game")]
+        public AudioClip startGame_sfx;
 
         [Header("Menu Objects")]
         [Tooltip("Ref to the GameObject holding the Main Menu UI elements")]
@@ -42,7 +49,10 @@ namespace Matt_UI
             else
             {
                 // By default, we display the main menu
-                ToggleUIBlobs("MainMenu");
+                MainMenu_Blob.SetActive(true);
+                GameOver_Blob.SetActive(false);
+                Controls_Blob.SetActive(false);
+                bgm.clip = mainmenuMusic;
             }
 
             // When we load up the screen, we have the music ready to play
@@ -52,12 +62,15 @@ namespace Matt_UI
         // Starts up the main game
         public void NavigateToGame(int levelIndex)
         {
+            sfx.PlayOneShot(startGame_sfx);
+            bgm.Stop();
             StartCoroutine(sceneTransitioner.TransitionToScene(levelIndex));
         }
 
         // Quits the game
         public void QuitGame()
         {
+            sfx.PlayOneShot(selectButton_sfx);
             Application.Quit();
         }
 
@@ -77,6 +90,7 @@ namespace Matt_UI
                         bgm.clip = mainmenuMusic;
                     }
                     MainMenu_Blob.SetActive(true);
+                    sfx.PlayOneShot(selectButton_sfx);
                     break;
                 case "GameOver":
                     if (bgm.clip != gameoverMusic)
@@ -88,6 +102,7 @@ namespace Matt_UI
                     break;
                 case "Controls":
                     Controls_Blob.SetActive(true);
+                    sfx.PlayOneShot(selectButton_sfx);
                     break;
                 default:
                     Debug.LogError("The specified name does not exist!");
