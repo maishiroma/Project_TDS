@@ -14,6 +14,10 @@ namespace Matt_Gimmicks
         // Static Variables
         public static SlowMoEffect Instance;            // Only one of these cane be made at a time
 
+        [Header("External Refs")]
+        [Tooltip("The enemy spawner that is currently being used")]
+        public EnemySpawner enemySpawner;
+
         [Header("Sound Refs")]
         [Tooltip("Reference to the Background SFX that plays the game sounds")]
         public AudioSource sfx;
@@ -73,11 +77,18 @@ namespace Matt_Gimmicks
                 if (isInSlowMo == false && value == true)
                 {
                     // When slow motion is active, we enable various flags to showcase the slow motion
-                    slowMoStart.PlaySoundClip(sfx);
+                    // i.e. visual effects
                     gaugeBG.sprite = usingGauge;
-                    currLightTime = 0f;
                     playerLighting.enabled = true;
+
+                    // Timers for slow mo effect
+                    currLightTime = 0f;
                     isReady = false;
+
+                    // Sounds and external objects
+                    enemySpawner.IsSpawnDisabled = true;
+                    slowMoStart.PlaySoundClip(sfx);
+                    
                     isInSlowMo = value;
                 }
             }
@@ -127,6 +138,7 @@ namespace Matt_Gimmicks
                 if (slowMoGauge.value <= 0)
                 {
                     // Once we reach the duration length, we turn off slow motion
+                    enemySpawner.IsSpawnDisabled = false;
                     slowmoEnd.PlaySoundClip(sfx);
                     isInSlowMo = false;
 

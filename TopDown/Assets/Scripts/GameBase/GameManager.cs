@@ -88,6 +88,14 @@ namespace Matt_System
             }
         }
 
+        public void RemvoeAllEnemies()
+        {
+            foreach(EnemyMovement currEnemy in FindObjectsOfType<EnemyMovement>())
+            {
+                currEnemy.StartCoroutine(currEnemy.InvokeDefeated());
+            }
+        }
+
         // Moves the game logic to the game over screen.
         // Also saves the result score to a private variable
         public void GoToGameOver()

@@ -4,6 +4,7 @@
 
 namespace Matt_Gimmicks
 {
+    using Matt_System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -29,6 +30,16 @@ namespace Matt_Gimmicks
         [Tooltip("The layermask that holds all of the level terrain")]
         public LayerMask terrainLevel;
 
+        [Header("Difficulty Vars")]
+        [Tooltip("Additional sccre needed to reach next round")]
+        public int baseScoreAdddition = 100;
+        [Tooltip("How many rounds per game will it take to increase enemy spawn and count?")]
+        public int perRoundCheck = 3;
+        [Tooltip("How much faster do enemies spawn?")]
+        public float spawnRateChange = 0.3f;
+        [Tooltip("The rate on the max number of enemies that go up?")]
+        public int maxSpawnModifier = 1;
+
         [Header("Random Range Vars")]
         [Tooltip("The smallest x pos that enemies can spawn from")]
         public float leftMostRange;
@@ -43,11 +54,31 @@ namespace Matt_Gimmicks
         private List<GameObject> spawnedObjs = new List<GameObject>();      // A list of all of the spawned objects
         private bool disableSpawn = false;                                  // Disables spawning objects alltogether
         private float amountofTime = 0f;                                    // How much time has passed from the last spawn
+        private int toNextRoundScore;                                       // Score needed to get to next round
+
+        public bool IsSpawnDisabled
+        {
+            get { return disableSpawn; }
+            set
+            {
+                // We only set/deset the spawning if the pased value is properly set
+                if (disableSpawn == true && value == false)
+                {
+                    disableSpawn = value;
+                }
+                else if(disableSpawn == false && value == true)
+                {
+                    StopCoroutine(SpawnEnemy());
+                    disableSpawn = value;
+                }
+            }
+        }
 
         // Sets up the random seed
         private void Start()
         {
             Random.InitState(Random.Range(1, 255));
+            toNextRoundScore = baseScoreAdddition;
         }
 
         // Makes sure that the spawn rate and the enemyCloudDuration are not clashing
@@ -62,15 +93,10 @@ namespace Matt_Gimmicks
         // Handles spawn logic
         private void Update()
         {
-            // If the game is in slow mo, no enemies will be spawned
-            if (SlowMoEffect.Instance.IsInSlowMo)
+            if (GameManager.Instance.GetScoreSystem.CurrentScore >= toNextRoundScore && disableSpawn == false)
             {
-                disableSpawn = true;
-                StopCoroutine(SpawnEnemy());
-            }
-            else
-            {
-                disableSpawn = false;
+                IsSpawnDisabled = true;
+                StartCoroutine(IncreaseDifficulty());
             }
 
             // When the spawner can spawn enemies, it spawns them on a time interval
@@ -127,7 +153,7 @@ namespace Matt_Gimmicks
         // Removes all null enemies in list
         private void CleanSpawnList()
         {
-            disableSpawn = true;
+            IsSpawnDisabled = true;
             for (int currCount = 0; currCount < spawnedObjs.Count; ++currCount)
             {
                 if (spawnedObjs[currCount] == null)
@@ -138,6 +164,31 @@ namespace Matt_Gimmicks
             }
             disableSpawn = false;
         }
+    
+        // This gets callled automatically when the player's score enters a specifc threshold.
+        private IEnumerator IncreaseDifficulty()
+        {
+            // When a new round starts, all enemies are defeated
+            toNextRoundScore += baseScoreAdddition;
+            GameManager.Instance.StartCoroutine(GameManager.Instance.GetScoreSystem.UpdateRound());
+            GameManager.Instance.RemvoeAllEnemies();
+            yield return new WaitForSeconds(3f);
+
+            // Depending on the per round check, the amount of enemies + spawn rate will gradually increase
+            if(GameManager.Instance.GetScoreSystem.CurrentRound % perRoundCheck == 0)
+            {
+                if(spawnRate - spawnRateChange >= cloudDuration)
+                {
+                    spawnRate -= spawnRateChange;
+                }
+                maxEnemySpawn += maxSpawnModifier;
+            }
+            
+            // We clean up the spawn list, which will then kick off the next round
+            CleanSpawnList();
+            yield return new WaitForFixedUpdate();
+            
+        }    
     }
 
 }
