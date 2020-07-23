@@ -75,7 +75,7 @@ namespace Matt_UI
                 }
                 currHealth = value;
 
-                // We also briefy display the health meter when the player takes damage
+                // We briefy display the health meter to show the updated health
                 StartCoroutine(ToggleHealthVisual());
             }
         }
