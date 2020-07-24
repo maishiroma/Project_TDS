@@ -1476,6 +1476,7 @@ GameObject:
   m_Component:
   - component: {fileID: 686723063}
   - component: {fileID: 686723066}
+  - component: {fileID: 686723068}
   - component: {fileID: 686723065}
   - component: {fileID: 686723064}
   - component: {fileID: 686723067}
@@ -1562,23 +1563,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1343bac3a8f408e9431de4b931eec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawn: {fileID: 1858098877063218, guid: 5e5f4018807c84c7684fe5085cf6ac39, type: 3}
-  enemySpawn_Cloud: {fileID: 1971092924550660, guid: 4c06b15cb08164ae1aa5066eec2cfba5,
+  objectToSpawn: {fileID: 1858098877063218, guid: 5e5f4018807c84c7684fe5085cf6ac39,
     type: 3}
-  maxEnemySpawn: 10
+  maxObjectSpawned: 10
   spawnRate: 3
-  cloudDuration: 1
   terrainLevel:
     serializedVersion: 2
     m_Bits: 256
-  baseScoreAdddition: 10
-  perRoundCheck: 2
-  spawnRateChange: 0.3
-  maxSpawnModifier: 1
   leftMostRange: -30
   rightMostRange: 30
   bottomMostRange: -18
   topMostRange: 18
+  baseScoreAdddition: 10
+  perRoundCheck: 2
+  spawnRateChange: 0.3
+  maxSpawnModifier: 1
+  roundIntervals: 3
 --- !u!114 &686723067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1593,6 +1593,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transitionSpeed: 2.75
   transitioner: {fileID: 739924538}
+--- !u!114 &686723068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686723062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acba163baa09a2746ae10e251d48db10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToSpawn: {fileID: 2153480081644157185, guid: 7d720c0241129d44ba82a38245e66701,
+    type: 3}
+  maxObjectSpawned: 2
+  spawnRate: 70
+  terrainLevel:
+    serializedVersion: 2
+    m_Bits: 256
+  leftMostRange: -30
+  rightMostRange: 30
+  bottomMostRange: -18
+  topMostRange: 18
+  minTimePossible: 30
+  maxTimePossible: 60
 --- !u!1 &739924536
 GameObject:
   m_ObjectHideFlags: 0
