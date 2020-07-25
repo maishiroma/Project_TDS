@@ -377,6 +377,7 @@ GameObject:
   - component: {fileID: 4364526445585172}
   - component: {fileID: 50950018083484410}
   - component: {fileID: 61469736982074548}
+  - component: {fileID: 897322654980445409}
   - component: {fileID: 114682540239223726}
   m_Layer: 0
   m_Name: T_Enemy
@@ -450,6 +451,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 0.57}
   m_EdgeRadius: 0
+--- !u!114 &897322654980445409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858098877063218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e20e50b111a01b04aae4f4e05195ca79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactWithTag: Player
+  damageSound:
+    soundClip: {fileID: 8300000, guid: 580654b6447a646b2b9227ce02f25700, type: 3}
+    soundVolume: 1
 --- !u!114 &114682540239223726
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ namespace Matt_Gimmicks
         [Header("Sound Vars")]
         [Tooltip("Source that plays this audio clip")]
         public SfxWrapper spawnItemSound;
+        [Tooltip("Sound that plays when the iitem is gotten")]
         public SfxWrapper getItemSound;
 
         [Header("General Vars")]

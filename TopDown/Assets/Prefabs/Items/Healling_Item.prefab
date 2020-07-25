@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2153480081644157186}
   m_Layer: 0
   m_Name: Healling_Item
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
   itemAnims: {fileID: 2153480081857780478}
   spawnItemSound:
     soundClip: {fileID: 8300000, guid: faf26f770f223a348957fbd77be824a9, type: 3}
-    soundVolume: 1
+    soundVolume: 0.3
   getItemSound:
     soundClip: {fileID: 8300000, guid: 5bb15557351de7f4aa1a8c552a537e2f, type: 3}
     soundVolume: 1
@@ -127,7 +127,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
@@ -148,8 +148,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2046404117
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: -7818784435625019327, guid: 65a5a06c789722d408c6b1681b8e9d6e,
     type: 3}

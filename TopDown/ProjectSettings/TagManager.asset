@@ -8,6 +8,7 @@ TagManager:
   - Projectile
   - Walls
   - SFX
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -62,4 +63,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 3075341445
+    locked: 0
+  - name: Items
+    uniqueID: 2248563179
     locked: 0

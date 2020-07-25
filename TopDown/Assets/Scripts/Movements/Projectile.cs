@@ -104,7 +104,7 @@ namespace Matt_Movement
         {
             // If we hit something that shares the same tag as the orig shooter, we ignore them
             // Think of this as friendly fire
-            if (collision.gameObject.tag != origShooterTag)
+            if (!collision.gameObject.CompareTag(origShooterTag))
             {
                 // In general, we only go in here if this projectile can interact with it aka, if it is in the array
                 if (CheckIfTagIsInArray(collision.gameObject.tag))

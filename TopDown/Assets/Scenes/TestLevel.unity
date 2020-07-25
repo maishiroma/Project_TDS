@@ -1608,7 +1608,7 @@ MonoBehaviour:
   objectToSpawn: {fileID: 2153480081644157185, guid: 7d720c0241129d44ba82a38245e66701,
     type: 3}
   maxObjectSpawned: 2
-  spawnRate: 70
+  spawnRate: 92.9
   terrainLevel:
     serializedVersion: 2
     m_Bits: 256
@@ -1616,8 +1616,8 @@ MonoBehaviour:
   rightMostRange: 30
   bottomMostRange: -18
   topMostRange: 18
-  minTimePossible: 30
-  maxTimePossible: 60
+  minTimePossible: 2
+  maxTimePossible: 8
 --- !u!1 &739924536
 GameObject:
   m_ObjectHideFlags: 0
@@ -3734,7 +3734,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_LightVolumeOpacity: 0
-  m_ApplyToSortingLayers: 00000000c98390ca4dca05f189171906496a469a5d0c8f11
+  m_ApplyToSortingLayers: 00000000c98390ca4dca05f189171906496a469a5d0c8f11eb590686
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 0
