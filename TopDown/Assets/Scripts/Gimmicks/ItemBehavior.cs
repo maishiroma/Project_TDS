@@ -74,7 +74,6 @@ namespace Matt_Gimmicks
         }
 
         // Removes the item from the game
-        // TODO: Addd particle effects
         private void Despawn()
         {
             Destroy(this.gameObject);

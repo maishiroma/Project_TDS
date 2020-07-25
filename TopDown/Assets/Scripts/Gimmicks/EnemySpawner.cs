@@ -22,6 +22,10 @@ namespace Matt_Gimmicks
         public float spawnRateChange = 0.3f;
         [Tooltip("The rate on the max number of enemies that go up?")]
         public int maxSpawnModifier = 1;
+        [Tooltip("The potental number of simultaneous enemy spawns that happen at once")]
+        public int simuSpawwnMax = 5;
+        [Tooltip("The number used to modify the number of simultaneous spawns")]
+        public int simuSpawwnMod = 1;
         [Tooltip("Time between rounds")]
         public float roundIntervals = 3f;
 
@@ -59,6 +63,30 @@ namespace Matt_Gimmicks
             }
         }
 
+        // Adds the additional behavior of spawwning in multiple enemies at once
+        protected override void CheckIfSpawnable()
+        {
+            // If we reached the max amount of objs spawned, we clean up the array
+            if(spawnedObjs.Count >= maxObjectSpawned)
+            {
+                CleanSpawnList();
+            }
+            
+            int randSpawnNo = Random.Range(1, simuSpawwnMax + 1);
+            for (int iterator = randSpawnNo; iterator > 0; iterator--)
+            {
+                if (spawnedObjs.Count < maxObjectSpawned)
+                {
+                    StartCoroutine(SpawnObject());
+                }
+                else
+                {
+                    // If we hit the cap, we just break out of the loop completly
+                    break;
+                }
+            }
+        }
+
         // This gets callled automatically when the player's score enters a specifc threshold.
         private IEnumerator IncreaseDifficulty()
         {
@@ -69,6 +97,7 @@ namespace Matt_Gimmicks
             {
                 spawnRate -= spawnRateChange;
                 maxObjectSpawned += maxSpawnModifier;
+                simuSpawwnMax += simuSpawwnMod;
             }
 
             // When a new round starts, all enemies are defeated automatically

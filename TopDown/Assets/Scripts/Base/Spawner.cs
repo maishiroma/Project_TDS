@@ -61,19 +61,7 @@ namespace Matt_Generics
             }
         }
 
-        // Checks if the spawner can spawn something
-        // If not, we will clean up the spawn list
-        protected void CheckIfSpawnable()
-        {
-            if (spawnedObjs.Count < maxObjectSpawned)
-            {
-                StartCoroutine(SpawnObject());
-            }
-            else
-            {
-                CleanSpawnList();
-            }
-        }
+       
 
         // Inherited Methods that can be overriden
 
@@ -101,6 +89,20 @@ namespace Matt_Generics
         protected virtual void Start()
         {
             Random.InitState(Random.Range(1, 255));
+        }
+
+        // Checks if the spawner can spawn something
+        // If not, we will clean up the spawn list
+        protected virtual void CheckIfSpawnable()
+        {
+            if (spawnedObjs.Count < maxObjectSpawned)
+            {
+                StartCoroutine(SpawnObject());
+            }
+            else
+            {
+                CleanSpawnList();
+            }
         }
 
         // Spawns a given object

@@ -1574,11 +1574,13 @@ MonoBehaviour:
   rightMostRange: 30
   bottomMostRange: -18
   topMostRange: 18
-  baseScoreAdddition: 10
-  perRoundCheck: 2
-  spawnRateChange: 0.3
-  maxSpawnModifier: 1
-  roundIntervals: 3
+  baseScoreAdddition: 100
+  perRoundCheck: 1
+  spawnRateChange: 0.5
+  maxSpawnModifier: 2
+  simuSpawwnMax: 3
+  simuSpawwnMod: 1
+  roundIntervals: 2
 --- !u!114 &686723067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1608,7 +1610,7 @@ MonoBehaviour:
   objectToSpawn: {fileID: 2153480081644157185, guid: 7d720c0241129d44ba82a38245e66701,
     type: 3}
   maxObjectSpawned: 2
-  spawnRate: 92.9
+  spawnRate: 80
   terrainLevel:
     serializedVersion: 2
     m_Bits: 256
@@ -1616,8 +1618,8 @@ MonoBehaviour:
   rightMostRange: 30
   bottomMostRange: -18
   topMostRange: 18
-  minTimePossible: 2
-  maxTimePossible: 8
+  minTimePossible: 25
+  maxTimePossible: 60
 --- !u!1 &739924536
 GameObject:
   m_ObjectHideFlags: 0
@@ -3799,7 +3801,7 @@ PrefabInstance:
     - target: {fileID: 6123752298459846714, guid: 204f77855d27646a0914fcacdd1357c6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -13.63
       objectReference: {fileID: 0}
     - target: {fileID: 6123752298459846714, guid: 204f77855d27646a0914fcacdd1357c6,
         type: 3}
