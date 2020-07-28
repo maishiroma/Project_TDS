@@ -64,16 +64,21 @@ namespace Matt_UI
 
                     // When the player takes damage, they get some invincibility frames
                     StartCoroutine(ToggleInvincibility());
+
+                    currHealth = value;
                 }
                 else
                 {
                     // Gaining Health
-                    if (value > maxHealth)
+                    if (value >= maxHealth)
                     {
                         currHealth = maxHealth;
                     }
+                    else
+                    {
+                        currHealth = value;
+                    }
                 }
-                currHealth = value;
 
                 // We briefy display the health meter to show the updated health
                 StartCoroutine(ToggleHealthVisual());

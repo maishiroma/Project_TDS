@@ -115,12 +115,16 @@ namespace Matt_Movement
             enemyCollision.enabled = false;
             isAggresive = false;
 
-            // We then scale the size of the sprite, (since the sprite was too small)
-
             yield return new WaitForSeconds(0.5f);
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);
         }
     
-    
+        public void ResetEnemy()
+        {
+            entityGraphics.SetBool("is_defeated", false);
+            entityRb.isKinematic = false;
+            enemyRange.SetActive(true);
+            enemyCollision.enabled = true;
+        }
     }
 }

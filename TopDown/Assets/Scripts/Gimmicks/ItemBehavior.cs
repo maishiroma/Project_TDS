@@ -8,6 +8,7 @@ namespace Matt_Gimmicks
     using Matt_UI;
     using Matt_Generics;
     using UnityEngine;
+    using System.Collections;
 
     // Determines what kind of item this is
     public enum ItemType
@@ -49,9 +50,7 @@ namespace Matt_Gimmicks
                 sfx = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
             }
 
-            Invoke("Despawn", itemDespawn);
-            Invoke("VisualDespawn", itemDespawn - 1f);
-
+            StartCoroutine(InvokeDespawning(itemDespawn));
             spawnItemSound.PlaySoundClip(sfx);
         }
 
@@ -69,20 +68,32 @@ namespace Matt_Gimmicks
                         break;
                 }
                 getItemSound.PlaySoundClip(sfx);
-                Despawn();
+                StartCoroutine(InvokeDespawning(0f));
             }
+        }
+
+        // Sets the animation for the item to despawning
+        private void VisualDespawn()
+        {
+            itemAnims.SetBool("canDespawn", true);
         }
 
         // Removes the item from the game
         private void Despawn()
         {
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);
         }
 
-        // Sets the animation to despawning
-        private void VisualDespawn()
+        // Public CoRoutine that allows for the itemm to despawn acccordingly
+        public IEnumerator InvokeDespawning(float timeToDespawn)
         {
-            itemAnims.SetBool("canDespawn", true);
+            yield return new WaitForSeconds(timeToDespawn);
+            if (itemAnims.GetBool("canDespawn") == false)
+            {
+                VisualDespawn();
+                yield return new WaitForSeconds(1f);
+                Despawn();
+            }
         }
     }
 

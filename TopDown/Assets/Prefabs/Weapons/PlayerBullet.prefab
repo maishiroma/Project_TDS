@@ -189,6 +189,7 @@ MonoBehaviour:
   - Enemy
   - Projectile
   - Walls
+  - Item
   projectileTrigger: {fileID: 3593410142099903703}
   projectileRender: {fileID: 3785095368316689321}
   projectileAnims: {fileID: 52610840576891785}

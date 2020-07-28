@@ -145,14 +145,22 @@ namespace Matt_Movement
                             projectileAnims.SetInteger("hit_type", 2);
                             break;
                         case "Projectile":
-                            // If we shoot an enemy projectime, we add points as well as help refill the slowmo meter
+                            // If the player shoot an enemy projectile, we add points as well as help refill the slowmo meter
                             if (origShooterTag == "Player" && collision.GetComponent<Projectile>().origShooterTag == "Enemy")
                             {
-                                PlaySoundAtSource("Projectile");
-                                projectileAnims.SetInteger("hit_type", 2);
                                 GameManager.Instance.GetScoreSystem.IncrementScore(1);
                                 SlowMoEffect.Instance.AddAdditionalTime(10f);
                             }
+                            PlaySoundAtSource("Projectile");
+                            projectileAnims.SetInteger("hit_type", 2);
+                            break;
+                        case "Item":
+                            // If the projectile hits an item, it will be destroyed
+                            ItemBehavior currItem = collision.GetComponent<ItemBehavior>();
+
+                            PlaySoundAtSource("Projectile");
+                            projectileAnims.SetInteger("hit_type", 2);
+                            currItem.StartCoroutine(currItem.InvokeDespawning(0f));
                             break;
                         case "Walls":
                             // All of these cases just cause the projectile to be destroyed (no special effects)

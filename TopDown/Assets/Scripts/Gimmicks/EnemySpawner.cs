@@ -8,7 +8,6 @@ namespace Matt_Gimmicks
     using Matt_Generics;
     using Matt_System;
     using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class EnemySpawner : Spawner
@@ -18,17 +17,21 @@ namespace Matt_Gimmicks
         public int baseScoreAdddition = 100;
         [Tooltip("How many rounds per game will it take to increase enemy spawn and count?")]
         public int perRoundCheck = 3;
-        [Tooltip("How much faster do enemies spawn?")]
-        public float spawnRateChange = 0.3f;
-        [Tooltip("The rate on the max number of enemies that go up?")]
-        public int maxSpawnModifier = 1;
-        [Tooltip("The potental number of simultaneous enemy spawns that happen at once")]
-        public int simuSpawwnMax = 5;
-        [Tooltip("The number used to modify the number of simultaneous spawns")]
-        public int simuSpawwnMod = 1;
         [Tooltip("Time between rounds")]
         public float roundIntervals = 3f;
-
+        [Space]
+        [Tooltip("The current amount of enemies that can spawn. Clamped to be less than or equal to maxObjectSpawned")]
+        public int currSpawnLimit = 3;
+        [Tooltip("The modifier on how many enemies that can spawn at the moment")]
+        public int currSpawnModdifier = 1;
+        [Tooltip("The modifier on how much faster enemies can spawn?")]
+        public float spawnRateChange = 0.3f;
+        [Space]
+        [Tooltip("The potental max number of enemy spawns that can happen in one spawn.")]
+        public int simuSpawnMax = 5;
+        [Tooltip("The modifier used to increase the number of enemies that spawn at once")]
+        public int simuSpawnModifier = 1;
+        
         // Private Vars
         private float amountofTime = 0f;               // How much time has passed from the last spawn
         private int toNextRoundScore;                  // Score needed to get to next round
@@ -67,15 +70,15 @@ namespace Matt_Gimmicks
         protected override void CheckIfSpawnable()
         {
             // If we reached the max amount of objs spawned, we clean up the array
-            if(spawnedObjs.Count >= maxObjectSpawned)
+            if(spawnedObjs.Count >= currSpawnLimit)
             {
                 CleanSpawnList();
             }
             
-            int randSpawnNo = Random.Range(1, simuSpawwnMax + 1);
+            int randSpawnNo = Random.Range(1, simuSpawnMax + 1);
             for (int iterator = randSpawnNo; iterator > 0; iterator--)
             {
-                if (spawnedObjs.Count < maxObjectSpawned)
+                if (spawnedObjs.Count < currSpawnLimit)
                 {
                     StartCoroutine(SpawnObject());
                 }
@@ -95,9 +98,11 @@ namespace Matt_Gimmicks
             GameManager.Instance.StartCoroutine(GameManager.Instance.GetScoreSystem.UpdateRound());
             if (GameManager.Instance.GetScoreSystem.CurrentRound % perRoundCheck == 0)
             {
-                spawnRate -= spawnRateChange;
-                maxObjectSpawned += maxSpawnModifier;
-                simuSpawwnMax += simuSpawwnMod;
+                // There is a limit to how small/large these values can get
+                // If those limits are reached, the changes will not be made
+                spawnRate = Mathf.Clamp(spawnRate - spawnRateChange, 1f, spawnRate);
+                currSpawnLimit = Mathf.Clamp(currSpawnLimit + currSpawnModdifier, 1, maxObjectSpawned);
+                simuSpawnMax = Mathf.Clamp(simuSpawnMax + simuSpawnModifier, 1, simuSpawnMax);
             }
 
             // When a new round starts, all enemies are defeated automatically
@@ -108,7 +113,7 @@ namespace Matt_Gimmicks
             yield return new WaitForSeconds(roundIntervals);
 
             disableSpawn = false;
-        }    
+        }
     }
 
 }

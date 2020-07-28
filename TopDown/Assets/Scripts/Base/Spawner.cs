@@ -48,9 +48,11 @@ namespace Matt_Generics
             
             for (int currCount = 0; currCount < spawnedObjs.Count; ++currCount)
             {
-                if (spawnedObjs[currCount] == null)
+                GameObject currObj = spawnedObjs[currCount];
+                if (currObj == null | currObj.activeInHierarchy == false)
                 {
-                    spawnedObjs.RemoveAt(currCount);
+                    spawnedObjs.Remove(currObj);
+                    Destroy(currObj);
                     currCount--;
                 }
             }
