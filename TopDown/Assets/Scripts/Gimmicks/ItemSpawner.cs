@@ -6,9 +6,6 @@
 namespace Matt_Gimmicks
 {
     using Matt_Generics;
-    using Matt_System;
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class ItemSpawner : Spawner
@@ -41,7 +38,19 @@ namespace Matt_Gimmicks
                     if(Random.Range(1, 101) <= spawnRate)
                     {
                         disableSpawn = true;
-                        CheckIfSpawnable();
+                        if(NoOfActiveSpawned() < maxObjectSpawned)
+                        {
+                            if (spawnPool.childCount < maxObjectSpawned)
+                            {
+                                SmartSpawnObj(true);
+                            }
+                            else
+                            {
+                                ItemBehavior newItem = SmartSpawnObj(false).GetComponent<ItemBehavior>();
+                                newItem.ResetItem();
+                            }
+                        }
+                        Invoke("ReenableSpawning", 1f);
                     }
                     amountofTime = 0f;
                     randomTimeSlot = Random.Range(minTimePossible, maxTimePossible);
@@ -49,13 +58,10 @@ namespace Matt_Gimmicks
             }
         }
 
-        // Adds an additional call to reset the spawning of this spawer once an object has spawned
-        protected override IEnumerator SpawnObject()
+        // Called in an invoke to reenable spawning of items
+        private void ReenableSpawning()
         {
-            yield return StartCoroutine(base.SpawnObject());
-
             disableSpawn = false;
-            yield return null;
         }
     }
 

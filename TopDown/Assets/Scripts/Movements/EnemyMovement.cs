@@ -10,7 +10,6 @@ namespace Matt_Movement
     using System.Collections;
     using Matt_Generics;
     using Matt_Gimmicks;
-    using Matt_UI;
 
     public class EnemyMovement : Entity
     {
@@ -34,7 +33,16 @@ namespace Matt_Movement
         public bool IsAggresive
         {
             get { return isAggresive; }
-            set { isAggresive = value; }
+            set 
+            { 
+                if(value == false)
+                {
+                    // If the player is out of the enemy's range, it will stop moving
+                    entityGraphics.SetBool("is_attacking", false);
+                    StopMovement();
+                }
+                isAggresive = value; 
+            }
         }
 
         // Grabs the player's rigidbody component and stores it
@@ -119,12 +127,15 @@ namespace Matt_Movement
             this.gameObject.SetActive(false);
         }
     
+        // Called to reset an enemy back to how they were created initially
         public void ResetEnemy()
         {
             entityGraphics.SetBool("is_defeated", false);
             entityRb.isKinematic = false;
-            enemyRange.SetActive(true);
-            enemyCollision.enabled = true;
+            
+            isAggresive = false;
+            hasFired = false;
+            currTime = 0f;
         }
     }
 }

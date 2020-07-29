@@ -95,6 +95,15 @@ namespace Matt_Gimmicks
                 Despawn();
             }
         }
+
+        // Callled to reset the properties of the item
+        public void ResetItem()
+        {
+            itemAnims.SetBool("canDespawn", false);
+            
+            StartCoroutine(InvokeDespawning(itemDespawn));
+            spawnItemSound.PlaySoundClip(sfx);
+        }
     }
 
 }

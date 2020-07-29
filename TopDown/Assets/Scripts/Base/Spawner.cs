@@ -4,8 +4,6 @@
 
 namespace Matt_Generics
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public abstract class Spawner : MonoBehaviour
@@ -18,6 +16,8 @@ namespace Matt_Generics
         [Tooltip("How often does this spawner spawn objects?")]
         [Range(0.1f, 99f)]
         public float spawnRate;
+        [Tooltip("The pool used to spawn/pull objs from")]
+        public Transform spawnPool;
         [Tooltip("The layermask that holds all of the level terrain")]
         public LayerMask terrainLevel;
 
@@ -32,7 +32,6 @@ namespace Matt_Generics
         public float topMostRange;
 
         // Protected Vars
-        protected List<GameObject> spawnedObjs = new List<GameObject>();      // A list of all of the spawned objects
         protected bool disableSpawn = false;                                  // Disables spawning objects alltogether
 
         // Inherited Methods that cannot be overriden
@@ -46,12 +45,11 @@ namespace Matt_Generics
                 disableSpawn = true;
             }
             
-            for (int currCount = 0; currCount < spawnedObjs.Count; ++currCount)
+            for (int currCount = 0; currCount < spawnPool.childCount; ++currCount)
             {
-                GameObject currObj = spawnedObjs[currCount];
-                if (currObj == null | currObj.activeInHierarchy == false)
+                GameObject currObj = spawnPool.GetChild(currCount).gameObject;
+                if (currObj == null || currObj.activeInHierarchy == false)
                 {
-                    spawnedObjs.Remove(currObj);
                     Destroy(currObj);
                     currCount--;
                 }
@@ -63,7 +61,57 @@ namespace Matt_Generics
             }
         }
 
-       
+        // Depending on the paramter, this object will either return a new spawned object, or an existing one from the pool
+        protected GameObject SmartSpawnObj(bool spawnNew = true)
+        {
+            Collider2D[] collisions = new Collider2D[3];
+            Vector2 spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
+
+            // Makes sure that the spwned object does not spawn in a wall or anything solid
+            int numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
+            while (numb > 0)
+            {
+                spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
+                numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
+            }
+
+            if (spawnNew == true)
+            {
+                // Creates a new object and asspciates it with the spawn pool
+                return Instantiate(objectToSpawn, spawnPos, Quaternion.identity, spawnPool);
+            }
+            else
+            {
+                // We look for an existing, deactive spawned object in the pool
+                // and if we find one at random, we reset its pos and rotation to be like it was 
+                int randObjInPool = Random.Range(0, spawnPool.childCount);
+                while (spawnPool.GetChild(randObjInPool).gameObject.activeInHierarchy != false)
+                {
+                    randObjInPool = Random.Range(0, spawnPool.childCount);
+                }
+                GameObject revivedObj = spawnPool.GetChild(randObjInPool).gameObject;
+                revivedObj.transform.position = spawnPos;
+                revivedObj.transform.rotation = Quaternion.identity;
+                revivedObj.SetActive(true);
+
+                return revivedObj;
+            }
+        }
+
+        // Returns the number of objs that are spawned (aka, being active)
+        protected int NoOfActiveSpawned()
+        {
+            int total = 0;
+            for (int currCount = 0; currCount < spawnPool.childCount; ++currCount)
+            {
+                GameObject currObj = spawnPool.GetChild(currCount).gameObject;
+                if (currObj.activeInHierarchy == true)
+                {
+                    total++;
+                }
+            }
+            return total;
+        }
 
         // Inherited Methods that can be overriden
 
@@ -80,7 +128,6 @@ namespace Matt_Generics
                 }
                 else if (disableSpawn == false && value == true)
                 {
-                    StopCoroutine(SpawnObject());
                     disableSpawn = value;
                 }
             }
@@ -91,39 +138,6 @@ namespace Matt_Generics
         protected virtual void Start()
         {
             Random.InitState(Random.Range(1, 255));
-        }
-
-        // Checks if the spawner can spawn something
-        // If not, we will clean up the spawn list
-        protected virtual void CheckIfSpawnable()
-        {
-            if (spawnedObjs.Count < maxObjectSpawned)
-            {
-                StartCoroutine(SpawnObject());
-            }
-            else
-            {
-                CleanSpawnList();
-            }
-        }
-
-        // Spawns a given object
-        protected virtual IEnumerator SpawnObject()
-        {
-            Collider2D[] collisions = new Collider2D[3];
-            Vector2 spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
-
-            // Makes sure that the spwned object does not spawn in a wall or anything solid
-            int numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
-            while (numb > 0)
-            {
-                spawnPos = new Vector2(Random.Range(leftMostRange, rightMostRange), Random.Range(bottomMostRange, topMostRange));
-                numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
-            }
-
-            GameObject newObject = Instantiate(objectToSpawn, spawnPos, Quaternion.identity);
-            spawnedObjs.Add(newObject);
-            yield return null;
         }
 
         // Methods that must be declared in all sub classes

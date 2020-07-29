@@ -6,6 +6,7 @@
 namespace Matt_Gimmicks
 {
     using Matt_Generics;
+    using Matt_Movement;
     using Matt_System;
     using System.Collections;
     using UnityEngine;
@@ -61,31 +62,32 @@ namespace Matt_Gimmicks
                 if (amountofTime >= spawnRate)
                 {
                     amountofTime = 0f;
-                    CheckIfSpawnable();
-                }
-            }
-        }
 
-        // Adds the additional behavior of spawwning in multiple enemies at once
-        protected override void CheckIfSpawnable()
-        {
-            // If we reached the max amount of objs spawned, we clean up the array
-            if(spawnedObjs.Count >= currSpawnLimit)
-            {
-                CleanSpawnList();
-            }
-            
-            int randSpawnNo = Random.Range(1, simuSpawnMax + 1);
-            for (int iterator = randSpawnNo; iterator > 0; iterator--)
-            {
-                if (spawnedObjs.Count < currSpawnLimit)
-                {
-                    StartCoroutine(SpawnObject());
-                }
-                else
-                {
-                    // If we hit the cap, we just break out of the loop completly
-                    break;
+                    // Using a random number, we randomly decide how many enemies will be abe to spawn at once
+                    int randSpawnNo = Mathf.Clamp(Random.Range(1, simuSpawnMax + 1), 0, currSpawnLimit);
+                    for (int iterator = randSpawnNo; iterator > 0; iterator--)
+                    {
+                        // We check to see if we are within the amount that can be spawned currently
+                        if (NoOfActiveSpawned() < currSpawnLimit)
+                        {
+                            // If the spawn pool needs to expand (as in there's less total objs than the current round's spawn limit, we create more entities
+                            if (spawnPool.childCount < currSpawnLimit)
+                            {
+                                SmartSpawnObj(true);
+                            }
+                            else
+                            {
+                                // If the spawn pool already reached the limit of current spawned entiies that round, we find an existing "despawned" one and reset it back to normal
+                                EnemyMovement newEnemy = SmartSpawnObj(false).GetComponent<EnemyMovement>();
+                                newEnemy.ResetEnemy();
+                            }
+                        }
+                        else
+                        {
+                            // If we are at the limit, we break out of the spawning logic
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -109,7 +111,6 @@ namespace Matt_Gimmicks
             // Once we clean up the spawn list, the next round will kick off after X seconds
             toNextRoundScore += baseScoreAdddition;
             GameManager.Instance.RemvoeAllEnemies();
-            CleanSpawnList(false);
             yield return new WaitForSeconds(roundIntervals);
 
             disableSpawn = false;
