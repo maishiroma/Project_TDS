@@ -45,10 +45,11 @@ namespace Matt_Movement
             }
         }
 
-        // Grabs the player's rigidbody component and stores it
+        // Grabs the player's rigidbody component and enemy projecctile pool and stores it
         private void Start()
         {
             playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+            entityProjectilePool = GameObject.FindGameObjectWithTag("EnemyProjectilePool").transform;
         }
 
         // When the enemy is aggresive, a inner timer will count down until the enemy can start attacking

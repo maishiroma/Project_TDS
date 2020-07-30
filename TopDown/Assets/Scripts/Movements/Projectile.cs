@@ -24,6 +24,8 @@ namespace Matt_Movement
         [Header("Physics Refs")]
         [Tooltip("Ref to the hitbox of this projectile")]
         public BoxCollider2D projectileTrigger;
+        [Tooltip("Ref to the rigidbody of this projectile")]
+        public Rigidbody2D projectileRb;
 
         [Header("Visual Refs")]
         [Tooltip("Ref to the render of the projectile")]
@@ -49,18 +51,14 @@ namespace Matt_Movement
         public string origShooterTag;       // The gameobject's tag that shot this
 
         // Private Vars
-        private Rigidbody2D rb;
         private float timeToDestroy = 0f;
 
-        // Sets up all of the components
-        private void Awake()
+        // Called when the object becomes active
+        private void OnEnable()
         {
-            rb = GetComponent<Rigidbody2D>();
-        }
+            timeToDestroy = 0f;
+            projectileAnims.SetInteger("hit_type", 0);
 
-        // Efficiently stores data on constantly referenced things that the class uses
-        private void Start()
-        {
             // When the projectile is made, it fires a sound efect
             PlaySoundAtSource("Start");
         }
@@ -80,7 +78,7 @@ namespace Matt_Movement
 
             if (timeToDestroy >= 5f)
             {
-                Destroy(this.gameObject);
+                this.gameObject.SetActive(false);
             }
         }
 
@@ -91,11 +89,11 @@ namespace Matt_Movement
             if (SlowMoEffect.Instance.IsInSlowMo && origShooterTag != "Player")
             {
                 float newSpeed = moveSpeed * SlowMoEffect.Instance.GetSlowDownFactor;
-                rb.velocity = rb.transform.up * newSpeed * Time.deltaTime;
+                projectileRb.velocity = projectileRb.transform.up * newSpeed * Time.deltaTime;
             }
             else
             {
-                rb.velocity = rb.transform.up * moveSpeed * Time.deltaTime;
+                projectileRb.velocity = projectileRb.transform.up * moveSpeed * Time.deltaTime;
             }
         }
 
@@ -185,7 +183,7 @@ namespace Matt_Movement
         {
             // Gives time for the physics to kick in
             projectileTrigger.enabled = false;
-            rb.constraints = RigidbodyConstraints2D.FreezePosition;
+            projectileRb.constraints = RigidbodyConstraints2D.FreezePosition;
             yield return new WaitForFixedUpdate();
 
             // Plays out the animation for getting destroyed
@@ -194,7 +192,7 @@ namespace Matt_Movement
 
             // Then removes the object after X seconds
             yield return new WaitForSeconds(0.3f);
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);
         }
 
         // Helper method to check if a tag is in the array
@@ -228,6 +226,25 @@ namespace Matt_Movement
                 case "Walls":
                     hitWall.PlaySoundClip(sfxSource);
                     break;
+            }
+        }
+
+        // Configs the projectile to be used
+        public void SetupProjectile(Vector2 newPos, Quaternion newRotation, string shooterTag)
+        {
+            if(this.gameObject.activeInHierarchy == false)
+            {
+                projectileTrigger.enabled = true;
+                projectileRb.constraints = RigidbodyConstraints2D.None;
+
+                projectileLight.enabled = true;
+                projectileRender.flipY = false;
+
+                origShooterTag = shooterTag;
+                this.gameObject.transform.position = newPos;
+                this.gameObject.transform.rotation = newRotation;
+
+                this.gameObject.SetActive(true);
             }
         }
     }

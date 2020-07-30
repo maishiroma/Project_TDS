@@ -9,6 +9,7 @@ TagManager:
   - Walls
   - SFX
   - Item
+  - EnemyProjectilePool
   layers:
   - Default
   - TransparentFX

@@ -191,6 +191,7 @@ MonoBehaviour:
   - Walls
   - Item
   projectileTrigger: {fileID: 3593410142099903703}
+  projectileRb: {fileID: 7977039682008948371}
   projectileRender: {fileID: 3785095368316689321}
   projectileAnims: {fileID: 52610840576891785}
   projectileLight: {fileID: 1653573012}

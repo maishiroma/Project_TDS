@@ -27,8 +27,8 @@ namespace Matt_Generics
         public float attackRate;
 
         [Header("Outside References")]
-        [Tooltip("The projectile the character will use when attacking")]
-        public Projectile entityProjectile;
+        [Tooltip("Ref to projectile pool utilized")]
+        public Transform entityProjectilePool;
         [Tooltip("Reference to the entity's front. Used to calculate where the firing will shoot from.")]
         public Transform frontOfEntity;
 
@@ -72,8 +72,14 @@ namespace Matt_Generics
             {
                 entityGraphics.SetBool("is_attacking", true);
                 Quaternion shotRotation = Quaternion.FromToRotation(Vector2.up, posToShootAt - entityRb.position);
-                Projectile bulletShot = Instantiate(entityProjectile, frontOfEntity.position, shotRotation, null);
-                bulletShot.origShooterTag = gameObject.tag;
+
+                int randProj = Random.Range(0, entityProjectilePool.childCount);
+                while(entityProjectilePool.GetChild(randProj).gameObject.activeInHierarchy == true)
+                {
+                    randProj = Random.Range(0, entityProjectilePool.childCount);
+                }
+                Projectile bulletShot = entityProjectilePool.GetChild(randProj).GetComponent<Projectile>();
+                bulletShot.SetupProjectile(frontOfEntity.position, shotRotation, gameObject.tag);
 
                 hasFired = true;
                 yield return new WaitForSeconds(attackRate);
