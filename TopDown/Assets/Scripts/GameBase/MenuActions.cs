@@ -71,7 +71,7 @@ namespace Matt_UI
         public void QuitGame()
         {
             sfx.PlayOneShot(selectButton_sfx);
-            Application.Quit();
+            StartCoroutine(sceneTransitioner.QuitGame());
         }
 
         // Toggles the named ui element to be the only one on

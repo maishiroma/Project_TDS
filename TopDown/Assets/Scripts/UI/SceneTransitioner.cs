@@ -100,5 +100,12 @@ namespace Matt_UI
             }
             sceneLoader.allowSceneActivation = true;
         }
+
+        public IEnumerator QuitGame()
+        {
+            StartExit();
+            yield return new WaitForSeconds(3f);
+            Application.Quit();
+        }
     }
 }

@@ -265,6 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerLight: {fileID: 663588223}
+  enemyMovement: {fileID: 114682540239223726}
 --- !u!1 &1841732386912256
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,8 +484,7 @@ MonoBehaviour:
   entityRenderer: {fileID: 212464847274881198}
   moveSpeed: 10
   attackRate: 2
-  entityProjectile: {fileID: 236307845066013766, guid: efbe2f084b1b9498eb5895f25c568432,
-    type: 3}
+  entityProjectilePool: {fileID: 0}
   frontOfEntity: {fileID: 4475613463155862}
   enemyRange: {fileID: 1989628468952448}
   enemyCollision: {fileID: 61469736982074548}

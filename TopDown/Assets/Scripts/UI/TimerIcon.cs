@@ -10,6 +10,7 @@ namespace Matt_UI
     using UnityEngine;
     using Matt_Gimmicks;
     using UnityEngine.Experimental.Rendering.LWRP;
+    using Matt_Movement;
 
     // This script should be on the gameobject that also has the animator and sprite render of the timer ui
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
@@ -18,6 +19,8 @@ namespace Matt_UI
         [Header("External Refs")]
         [Tooltip("The light emitting from the timer")]
         public Light2D timerLight;
+        [Tooltip("The enemy movement AI")]
+        public EnemyMovement enemyMovement;
 
         // Private vars
         private Animator slowMoAnimatior;        // The animatior that is on the gameObject controlling the sprite
@@ -42,7 +45,7 @@ namespace Matt_UI
         // Handles the logic for showcasing the slow mo on the enemy
         private void Update()
         {
-            if (SlowMoEffect.Instance.IsInSlowMo)
+            if (SlowMoEffect.Instance.IsInSlowMo && enemyMovement.IsAlive == true)
             {
                 gameObject.transform.rotation = Quaternion.identity;
                 ShowSlowMoEffect();

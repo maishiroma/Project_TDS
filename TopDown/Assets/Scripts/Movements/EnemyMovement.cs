@@ -10,6 +10,7 @@ namespace Matt_Movement
     using System.Collections;
     using Matt_Generics;
     using Matt_Gimmicks;
+    using Matt_UI;
 
     public class EnemyMovement : Entity
     {
@@ -27,9 +28,10 @@ namespace Matt_Movement
         // Private Vars
         private Rigidbody2D playerRb;       // Caches the player's Rigidbody for future calculations
         private bool isAggresive;           // Is the enemy in an aggresive state
+        private bool isAlive = true;       // Check to see if the enemy is alive
         private float currTime;             // Helper method to keep track of how 
 
-        // Getter/Setter
+        // Getters/Setters
         public bool IsAggresive
         {
             get { return isAggresive; }
@@ -43,6 +45,11 @@ namespace Matt_Movement
                 }
                 isAggresive = value; 
             }
+        }
+
+        public bool IsAlive
+        {
+            get { return isAlive; }
         }
 
         // Grabs the player's rigidbody component and enemy projecctile pool and stores it
@@ -123,6 +130,7 @@ namespace Matt_Movement
             enemyRange.SetActive(false);
             enemyCollision.enabled = false;
             isAggresive = false;
+            isAlive = false;
 
             yield return new WaitForSeconds(0.5f);
             this.gameObject.SetActive(false);
@@ -133,7 +141,8 @@ namespace Matt_Movement
         {
             entityGraphics.SetBool("is_defeated", false);
             entityRb.isKinematic = false;
-            
+
+            isAlive = true;
             isAggresive = false;
             hasFired = false;
             currTime = 0f;
