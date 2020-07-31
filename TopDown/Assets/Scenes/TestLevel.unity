@@ -3371,7 +3371,7 @@ MonoBehaviour:
   objectToSpawn: {fileID: 2153480081644157185, guid: 7d720c0241129d44ba82a38245e66701,
     type: 3}
   maxObjectSpawned: 2
-  spawnRate: 80
+  spawnRate: 85
   spawnPool: {fileID: 1418505480}
   terrainLevel:
     serializedVersion: 2
@@ -3381,7 +3381,7 @@ MonoBehaviour:
   bottomMostRange: -18
   topMostRange: 18
   minTimePossible: 25
-  maxTimePossible: 60
+  maxTimePossible: 45
 --- !u!1001 &708480175
 PrefabInstance:
   m_ObjectHideFlags: 0

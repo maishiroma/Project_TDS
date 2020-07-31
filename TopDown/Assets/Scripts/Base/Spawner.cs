@@ -75,9 +75,12 @@ namespace Matt_Generics
                 numb = Physics2D.OverlapPointNonAlloc(spawnPos, collisions, terrainLevel);
             }
 
-            if (spawnNew == true)
+            // Because NoOfActivveSpawned is a bit taxing, if spawnNew is true, we skip evaluating the right side
+            if (spawnNew == true | NoOfActiveSpawned() >= spawnPool.childCount)
             {
                 // Creates a new object and asspciates it with the spawn pool
+                // Note that if for some reason if spawnNew is false and there isn't any non active objects, we 
+                // simply spawn another ones
                 return Instantiate(objectToSpawn, spawnPos, Quaternion.identity, spawnPool);
             }
             else
