@@ -101,10 +101,14 @@ namespace Matt_UI
             sceneLoader.allowSceneActivation = true;
         }
 
+        // Transitions out of the game
         public IEnumerator QuitGame()
         {
             StartExit();
-            yield return new WaitForSeconds(3f);
+            while (transitioner.fillAmount < 1f)
+            {
+                yield return null;
+            }
             Application.Quit();
         }
     }

@@ -2,6 +2,8 @@
 This is the source code to my latest proof of concept: coined Project_TDS (Top Down Shooter).
 
 ## Overview
+![Overview](./Documentation/assets/game_demo.gif)
+
 Project TDS is a 2D Top Down Shooter where the goal of the game is to survive as long as possible while racking in a high enough score. With the tride and true mechanics of shooters, this game also adds an additional layer of gameplay called `Bullet Time`, where if the player dodges an enemy shot at the last second, the entire level will slow down, except for the player for a short amount of time.
 
 ## Basic Controls
@@ -11,8 +13,8 @@ Project TDS is a 2D Top Down Shooter where the goal of the game is to survive as
 * Space + WASD: Quick Dash
 * Space: Dodge
 
-- The player cannot dodge multiple times in a row; there is a slight cooldown after a dodge
-- When the player performs a successful dodge, they cannot perform any more dodges until the dodge meter (bottom portion of the screen) fills up.
+> The player cannot dodge multiple times in a row; there is a slight cooldown after a dodge
+> When the player performs a successful dodge, they cannot perform any more dodges until the dodge meter (bottom portion of the screen) fills up.
 
 ## Win Condition
 The player survivies for as long as possible
@@ -22,10 +24,10 @@ The player loses all of their health to the enemies
 
 ## Releases
 To find the latest releases of the project, refer to the following links:
-- [Windows]()
-- [MacOS]()
+- [Windows](https://github.com/maishiroma/Project_TDS/releases/download/0.1.0/Windows_Release.zip)
+- [MacOS](https://github.com/maishiroma/Project_TDS/releases/download/0.1.0/MacOS_Release.zip)
 
-Alternatively, one could find all releases at the [releases]() tab.
+Alternatively, one could find all releases at the [releases](https://github.com/maishiroma/Project_TDS/releases) tab.
 
 ## External Links
 [Trello Board](https://trello.com/b/9e9Zk4L6/project-tds)

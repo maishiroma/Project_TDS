@@ -81,6 +81,7 @@ namespace Matt_UI
                 }
 
                 // We briefy display the health meter to show the updated health
+                SetVisibiltyOfHealth(false);
                 StartCoroutine(ToggleHealthVisual());
             }
         }
